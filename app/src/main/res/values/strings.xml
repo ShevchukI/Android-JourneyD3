@@ -9,4 +9,27 @@
     <string name="nav_information_title">Information</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!--credits-->
+    <string name="credits_name">Credits</string>
+    <string name="credits_mobile_app_name">Mobile Application</string>
+    <string name="credits_mobile_app_description">Peryite</string>
+    <string name="credits_website_name">Website</string>
+    <string name="credits_website_link"> <a href="https://d3resource.com/journey/">https://d3resource.com/journey/</a></string>
+    <string name="credits_website_description">
+        <a href="https://www.reddit.com/user/bagstone"> by bagstone</a>
+    </string>
+
+    <string name="credits_icons_name">Icons for menu item</string>
+    <string name="credits_icons_description_one">
+        <a href="https://www.freepik.com/" title="Freepik">Freepik</a> from
+        <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a> is licensed by
+        <a href="http://creativecommons.org/licenses/by/3.0/" target="_blank" title="Creative Commons BY 3.0">CC 3.0 BY</a>
+    </string>
+    <string name="credits_icons_description_two">
+        <a href="https://www.flaticon.com/authors/iconixar" title="iconixar">iconixar </a>from
+        <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com </a> is licensed by
+        <a href="http://creativecommons.org/licenses/by/3.0/" target="_blank" title="Creative Commons BY 3.0">CC 3.0 BY</a>
+    </string>
+
 </resources>

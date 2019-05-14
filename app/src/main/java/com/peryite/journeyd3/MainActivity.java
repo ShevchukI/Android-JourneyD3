@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.peryite.journeyd3.DBHelper.DBHelper;
+import com.peryite.journeyd3.fragments.AboutFragment;
 import com.peryite.journeyd3.fragments.ChapterFragment;
 import com.peryite.journeyd3.models.Chapter;
 
@@ -69,6 +70,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_chapter:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         chapterFragment).commit();
+                break;
+            case R.id.nav_about:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new AboutFragment()).commit();
                 break;
         }
         drawer.closeDrawer(GravityCompat.START);
