@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/nav_chapter"
+            android:title="@string/nav_chapter_title"
+            android:icon="@drawable/ic_task">
+        </item>
+        <item android:id="@+id/nav_conquest"
+            android:title="@string/nav_conquest_title"
+            android:icon="@drawable/ic_conquest">
+        </item>
+        <item android:id="@+id/nav_reward"
+            android:title="@string/nav_reward_title"
+            android:icon="@drawable/ic_reward">
+        </item>
+    </group>
+    <item android:title="@string/nav_information_title">
+        <menu>
+            <item android:id="@+id/nav_about"
+                android:title="@string/nav_about_title"
+                android:icon="@drawable/ic_info">
+            </item>
+        </menu>
+    </item>
+</menu>

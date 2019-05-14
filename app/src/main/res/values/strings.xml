@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">JourneyD3</string>
+    <string name="full_app_name">Journey Diablo 3</string>
+    <string name="start_button">Start Journey!</string>
+    <string name="nav_chapter_title">Chapters</string>
+    <string name="nav_conquest_title">Conquests</string>
+    <string name="nav_reward_title">Rewards</string>
+    <string name="nav_about_title">About</string>
+    <string name="nav_information_title">Information</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+</resources>
