@@ -31,16 +31,9 @@ public class ParserDocument {
         Elements headers = document.getElementsByClass("header");
         ArrayList<Chapter> chapters = new ArrayList<>();
         ArrayList<ChapterTask> chapterTasks = new ArrayList<>();
-//        String[] chapter = new String[headers.size()];
         for (int i = 0; i < headers.size(); i++) {
             chapterTasks.clear();
-//            chapter[i] = headers.get(i).text();
             chapters.add(new Chapter(headers.get(i).text()));
-//            Elements tasks = document.getElementsByClass("cat" + (i + 1)).not(".rewards");
-//            for (Element task : tasks) {
-//                task.text(task.text().replace("- ", ""));
-//                chapterTasks.add(new ChapterTask(task.text(), false));
-//            }
             chapters.get(i).setTasks(getTasksByChapter(i + 1));
         }
         Log.d(LogTag.RESULT, "get Chapters from document");

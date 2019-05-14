@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 public class Chapter {
 
+    public final static String TOKEN = "chapterToken";
+
     private int id;
     private String name;
     private ArrayList<ChapterTask> tasks;

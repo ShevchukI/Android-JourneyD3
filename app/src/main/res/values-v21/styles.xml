@@ -16,4 +16,9 @@
         <item name="android:colorControlHighlight">@color/colorPlannerTitle</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat</item>
     </style>
+
+    <style name="ChapterLabel">
+        <item name="android:textColor">@color/colorTextJD3</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
 </resources>

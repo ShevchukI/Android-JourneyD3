@@ -15,7 +15,7 @@ import com.peryite.journeyd3.tools.LogTag;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class DBHelper extends SQLiteOpenHelper implements Serializable {
+public class DBHelper extends SQLiteOpenHelper {
 
     public final static String NAME = "dbHelper";
 
@@ -90,14 +90,6 @@ public class DBHelper extends SQLiteOpenHelper implements Serializable {
     }
 
     public void fillDatabase(ArrayList<Chapter> chapters) {
-//        String[] content;
-//        for (int i = 0; i < chapters.length; i++) {
-//            content = chapters[i].split("\n");
-//            chapterId = insertChapter(content[0]);
-//            for (int j = 1; j < content.length; j++) {
-//                insertChapterTask(content[j], chapterId);
-//            }
-//        }
         for (int i = 0; i < chapters.size(); i++) {
             chapters.get(i).setId(insertChapter(chapters.get(i).getName()));
             for(ChapterTask task: chapters.get(i).getTasks()){

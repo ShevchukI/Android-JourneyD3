@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.util.Log;
 
 public class LogTag {
+    public final static String CLICK = "CLICK";
     public final static String ERROR = "error";
     public final static String RESULT = "result";
     public final static String CHAPTER_TABLE = "chapter_table";

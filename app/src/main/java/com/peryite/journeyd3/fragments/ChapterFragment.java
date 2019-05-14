@@ -1,10 +1,7 @@
 package com.peryite.journeyd3.fragments;
 
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -35,16 +32,23 @@ public class ChapterFragment extends Fragment {
     private Button start;
     private LinearLayout mainLL;
     private ArrayList<Chapter> chapterList;
-    View view;
+    private View view;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        mHandler = new Handler(Looper.getMainLooper());
-        dbHelper = new DBHelper(getActivity());
-        chapterList = dbHelper.getAllChapters();
         view = inflater.inflate(R.layout.fragment_chapter, container, false);
         mainLL = view.findViewById(R.id.mainLinearLayout);
+        dbHelper = new DBHelper(getActivity());
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            chapterList = (ArrayList<Chapter>) bundle.getSerializable(Chapter.TOKEN);
+            createViewChaptersAndTasks();
+        } else {
+            chapterList = dbHelper.getAllChapters();
+            createViewChaptersAndTasks();
+        }
+        mHandler = new Handler(Looper.getMainLooper());
         start = view.findViewById(R.id.btnStart);
         start.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,29 +56,36 @@ public class ChapterFragment extends Fragment {
                 startJourney();
             }
         });
-        createViewChaptersAndTasks();
         return view;
     }
 
     private void startJourney() {
+        Log.d(LogTag.CLICK, "startJourney: click! operation start!");
+        mainLL.removeAllViews();
+        Log.d(LogTag.CLICK, "startJourney: remove all views!");
         new Thread(new Runnable() {
             @Override
             public void run() {
                 parser = new ParserDocument();
+                Log.d(LogTag.CLICK, "startJourney: parser create!");
                 dbHelper.clearAllTables();
+                Log.d(LogTag.CLICK, "startJourney: database clear!");
                 dbHelper.fillDatabase(parser.getChaptersAndTasksArray());
-                mHandler.post(new Runnable() {
+                Log.d(LogTag.CLICK, "startJourney: database filled!");
+                chapterList = dbHelper.getAllChapters();
+                Log.d(LogTag.CLICK, "startJourney: chapterList filled!");
+                getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        chapterList = dbHelper.getAllChapters();
-                        mainLL.removeAllViews();
                         createViewChaptersAndTasks();
-//                        LogTag.printLogArray(LogTag.RESULT, chapters);
+                        Log.d(LogTag.CLICK, "startJourney: new elements created!");
                     }
                 });
+                Log.d(LogTag.RESULT, String.valueOf(chapterList.size()));
             }
 
         }).start();
+        Log.d(LogTag.CLICK, "startJourney: operation finished!");
     }
 
     private void createViewChaptersAndTasks() {
@@ -88,17 +99,17 @@ public class ChapterFragment extends Fragment {
     }
 
     private void createChapterLabel(Chapter chapter) {
-        LinearLayout.LayoutParams layoutParams = getLayoutParamByGravity(Gravity.CENTER);
-        TextView tvChapter = new TextView(getActivity());
+        LinearLayout.LayoutParams layoutParams = getLayoutParamByGravity(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
+        layoutParams.topMargin = 50;
+        TextView tvChapter = new TextView(new ContextThemeWrapper(getActivity(), R.style.ChapterLabel), null, 0);
         tvChapter.setId(chapter.getId());
         tvChapter.setText(chapter.getName());
         mainLL.addView(tvChapter, layoutParams);
     }
 
     private void createChapterTaskCheckBox(ChapterTask chapterTask) {
-        LinearLayout.LayoutParams layoutParams = getLayoutParamByGravity(Gravity.LEFT);
+        LinearLayout.LayoutParams layoutParams = getLayoutParamByGravity(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.LEFT);
         final CheckBox cbChapterTask = new CheckBox(new ContextThemeWrapper(getActivity(), R.style.Checkbox), null, 0);
-//        final CheckBox cbChapterTask = new CheckBox(getActivity());
         cbChapterTask.setId(chapterTask.getId());
         cbChapterTask.setText(chapterTask.getName());
         if (chapterTask.isDone()) {
@@ -113,6 +124,8 @@ public class ChapterFragment extends Fragment {
                     for (ChapterTask chapterTask : chapter.getTasks()) {
                         if (cbChapterTask.getId() == chapterTask.getId()) {
                             chapterTask.setDone(cbChapterTask.isChecked());
+                            Log.d(LogTag.CLICK, "Task (id: " + chapterTask.getId() + " , name: " + chapterTask.getName()
+                                    + ") changed! New status: " + chapterTask.isDone());
                             return;
                         }
                     }
@@ -123,18 +136,43 @@ public class ChapterFragment extends Fragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onPause() {
         saveJourney();
+        Log.d(LogTag.RESULT, "onPause start");
+        super.onPause();
+        Log.d(LogTag.RESULT, "onPause end");
+    }
+
+    @Override
+    public void onStop() {
+        Log.d(LogTag.RESULT, "onStop start");
+        super.onStop();
+        Log.d(LogTag.RESULT, "onStop end");
+    }
+
+    @Override
+    public void onResume() {
+        Log.d(LogTag.RESULT, "onResume start");
+        super.onResume();
+        Log.d(LogTag.RESULT, "onResume end");
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.d(LogTag.RESULT, "onDestroy start");
+        saveJourney();
+        super.onDestroy();
+        Log.d(LogTag.RESULT, "onDestroy end");
     }
 
     private void saveJourney() {
         dbHelper.updateChapter(chapterList);
+        Log.d(DBHelper.NAME, "DataBase updated!");
     }
 
-    private LinearLayout.LayoutParams getLayoutParamByGravity(int gravity) {
+    private LinearLayout.LayoutParams getLayoutParamByGravity(int width, int height, int gravity) {
         LinearLayout.LayoutParams layoutParams
-                = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                = new LinearLayout.LayoutParams(width, height);
         layoutParams.gravity = gravity;
         layoutParams.topMargin = 20;
         return layoutParams;
