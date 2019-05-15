@@ -37,52 +37,30 @@ public class ChapterFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_chapter, container, false);
         mainLL = view.findViewById(R.id.mainLinearLayout);
         dbHelper = new DBHelper(getActivity());
-        chapterList = dbHelper.getAllChapters();
-//        Bundle bundle = this.getArguments();
-//        if (bundle != null) {
-//            chapterList = (ArrayList<Chapter>) bundle.getSerializable(Chapter.TOKEN);
-//            createViewChaptersAndTasks();
-//        } else {
-//            chapterList = dbHelper.getAllChapters();
-//            createViewChaptersAndTasks();
-//        }
-        createViewChaptersAndTasks();
-        start = view.findViewById(R.id.btnStart);
-        start.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startJourney();
-            }
+        getActivity().runOnUiThread(() -> {
+            removeAllElements();
+            createElementsByDataBase();
         });
+        start = view.findViewById(R.id.btnStart);
+        start.setOnClickListener(start -> startJourney());
         return view;
     }
 
     private void startJourney() {
         Log.d(LogTag.CLICK, "startJourney: click! operation start!");
-
-        mainLL.removeAllViews();
+        removeAllElements();
         Log.d(LogTag.CLICK, "startJourney: remove all views!");
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                parser = new ParserDocument();
-                Log.d(LogTag.CLICK, "startJourney: parser create!");
-                dbHelper.clearAllTables();
-                Log.d(LogTag.CLICK, "startJourney: database clear!");
-                dbHelper.fillDatabase(parser.getChaptersAndTasksArray());
-                Log.d(LogTag.CLICK, "startJourney: database filled!");
-                chapterList = dbHelper.getAllChapters();
-                Log.d(LogTag.CLICK, "startJourney: chapterList filled!");
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        createViewChaptersAndTasks();
-                        Log.d(LogTag.CLICK, "startJourney: new elements created!");
-                    }
-                });
-                Log.d(LogTag.RESULT, String.valueOf(chapterList.size()));
-            }
-
+        new Thread(() -> {
+            parser = new ParserDocument();
+            Log.d(LogTag.CLICK, "startJourney: parser create!");
+            dbHelper.clearAllTables();
+            Log.d(LogTag.CLICK, "startJourney: database clear!");
+            dbHelper.fillDatabase(parser.getChaptersAndTasksArray());
+            Log.d(LogTag.CLICK, "startJourney: database filled!");
+            getActivity().runOnUiThread(() -> {
+                createElementsByDataBase();
+            });
+            Log.d(LogTag.RESULT, String.valueOf(chapterList.size()));
         }).start();
         Log.d(LogTag.CLICK, "startJourney: operation finished!");
     }
@@ -118,17 +96,14 @@ public class ChapterFragment extends Fragment {
         } else {
             cbChapterTask.setChecked(false);
         }
-        cbChapterTask.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                for (Chapter chapter : chapterList) {
-                    for (ChapterTask chapterTask : chapter.getTasks()) {
-                        if (cbChapterTask.getId() == chapterTask.getId()) {
-                            chapterTask.setDone(cbChapterTask.isChecked());
-                            Log.d(LogTag.CLICK, "Task (id: " + chapterTask.getId() + " , name: " + chapterTask.getName()
-                                    + ") changed! New status: " + chapterTask.isDone());
-                            return;
-                        }
+        cbChapterTask.setOnClickListener(v -> {
+            for (Chapter chapter : chapterList) {
+                for (ChapterTask chapterTask1 : chapter.getTasks()) {
+                    if (cbChapterTask.getId() == chapterTask1.getId()) {
+                        chapterTask1.setDone(cbChapterTask.isChecked());
+                        Log.d(LogTag.CLICK, "Task (id: " + chapterTask1.getId() + " , name: " + chapterTask1.getName()
+                                + ") changed! New status: " + chapterTask1.isDone());
+                        return;
                     }
                 }
             }
@@ -139,6 +114,7 @@ public class ChapterFragment extends Fragment {
     @Override
     public void onPause() {
         saveJourney();
+        removeAllElements();
         Log.d(LogTag.RESULT, "onPause start");
         super.onPause();
         Log.d(LogTag.RESULT, "onPause end");
@@ -146,6 +122,8 @@ public class ChapterFragment extends Fragment {
 
     @Override
     public void onStop() {
+        saveJourney();
+        removeAllElements();
         Log.d(LogTag.RESULT, "onStop start");
         super.onStop();
         Log.d(LogTag.RESULT, "onStop end");
@@ -154,14 +132,22 @@ public class ChapterFragment extends Fragment {
     @Override
     public void onResume() {
         Log.d(LogTag.RESULT, "onResume start");
+        createElementsByDataBase();
         super.onResume();
         Log.d(LogTag.RESULT, "onResume end");
+    }
+
+    @Override
+    public void onStart() {
+        createElementsByDataBase();
+        super.onStart();
     }
 
     @Override
     public void onDestroy() {
         Log.d(LogTag.RESULT, "onDestroy start");
         saveJourney();
+        removeAllElements();
         super.onDestroy();
         Log.d(LogTag.RESULT, "onDestroy end");
     }
@@ -171,5 +157,13 @@ public class ChapterFragment extends Fragment {
         Log.d(DBHelper.NAME, "DataBase updated!");
     }
 
+    private void createElementsByDataBase() {
+        chapterList = dbHelper.getAllChapters();
+        createViewChaptersAndTasks();
+    }
+
+    private void removeAllElements() {
+        mainLL.removeAllViews();
+    }
 
 }

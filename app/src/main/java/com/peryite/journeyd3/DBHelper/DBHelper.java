@@ -58,7 +58,7 @@ public class DBHelper extends SQLiteOpenHelper {
             chapters.get(i).setId(chapterTable.insertChapter(database, chapters.get(i).getName()));
             for (int j = 0; j < chapters.get(i).getTasks().size(); j++) {
                 ChapterTask chapterTask = new ChapterTask();
-                chapterTask.setId(chapters.get(i).getId()*10 + j);
+//                chapterTask.setId(chapters.get(i).getId()*10 + j);
                 chapterTask.setName(chapters.get(i).getTasks().get(j).getName());
                 chapterTask.setDone(false);
                 chapterTaskTable.insertChapterTask(database, chapters.get(i).getId(), chapterTask);
@@ -69,15 +69,22 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public void clearAllTables() {
         SQLiteDatabase database = this.getWritableDatabase();
-        database.beginTransaction();
-        try {
-            database.delete(ChapterTaskTable.TABLE_NAME, null, null);
-            database.delete(ChapterTable.TABLE_NAME, null, null);
-            database.delete(RewardTable.TABLE_NAME, null, null);
-            database.setTransactionSuccessful();
-        } finally {
-            database.endTransaction();
-        }
+//        database.beginTransaction();
+//        try {
+            String delTask = "DELETE FROM " + ChapterTaskTable.TABLE_NAME;
+            database.execSQL(delTask);
+            database.execSQL("DELETE FROM " + ChapterTable.TABLE_NAME);
+            database.execSQL("DELETE FROM " + RewardTable.TABLE_NAME);
+//            database.delete(ChapterTaskTable.TABLE_NAME, null, null);
+//            database.delete(ChapterTable.TABLE_NAME, null, null);
+//            database.delete(RewardTable.TABLE_NAME, null, null);
+//            database.setTransactionSuccessful();
+//        } catch (Exception e){
+//            Log.d(LogTag.ERROR, e.getMessage());
+//        }
+//        finally {
+//            database.endTransaction();
+//        }
         database.close();
     }
 

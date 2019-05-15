@@ -41,7 +41,7 @@ class ChapterTaskTable implements TableRepository {
 
     public int insertChapterTask(SQLiteDatabase database, int chapterId, ChapterTask chapterTask) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(ID, chapterTask.getId());
+//        contentValues.put(ID, chapterTask.getId());
         contentValues.put(NAME, chapterTask.getName());
         if(chapterTask.isDone()){
             contentValues.put(DONE, 1);
