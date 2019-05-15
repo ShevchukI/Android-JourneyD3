@@ -1,13 +1,10 @@
 package com.peryite.journeyd3.fragments;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +23,6 @@ import com.peryite.journeyd3.tools.ParserDocument;
 import java.util.ArrayList;
 
 public class ChapterFragment extends Fragment {
-    private Handler mHandler;
     private DBHelper dbHelper;
     private ParserDocument parser;
     private Button start;
@@ -34,21 +30,23 @@ public class ChapterFragment extends Fragment {
     private ArrayList<Chapter> chapterList;
     private View view;
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_chapter, container, false);
         mainLL = view.findViewById(R.id.mainLinearLayout);
         dbHelper = new DBHelper(getActivity());
-        Bundle bundle = this.getArguments();
-        if (bundle != null) {
-            chapterList = (ArrayList<Chapter>) bundle.getSerializable(Chapter.TOKEN);
-            createViewChaptersAndTasks();
-        } else {
-            chapterList = dbHelper.getAllChapters();
-            createViewChaptersAndTasks();
-        }
-        mHandler = new Handler(Looper.getMainLooper());
+        chapterList = dbHelper.getAllChapters();
+//        Bundle bundle = this.getArguments();
+//        if (bundle != null) {
+//            chapterList = (ArrayList<Chapter>) bundle.getSerializable(Chapter.TOKEN);
+//            createViewChaptersAndTasks();
+//        } else {
+//            chapterList = dbHelper.getAllChapters();
+//            createViewChaptersAndTasks();
+//        }
+        createViewChaptersAndTasks();
         start = view.findViewById(R.id.btnStart);
         start.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,6 +59,7 @@ public class ChapterFragment extends Fragment {
 
     private void startJourney() {
         Log.d(LogTag.CLICK, "startJourney: click! operation start!");
+
         mainLL.removeAllViews();
         Log.d(LogTag.CLICK, "startJourney: remove all views!");
         new Thread(new Runnable() {
@@ -99,17 +98,19 @@ public class ChapterFragment extends Fragment {
     }
 
     private void createChapterLabel(Chapter chapter) {
-        LinearLayout.LayoutParams layoutParams = getLayoutParamByGravity(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
-        layoutParams.topMargin = 50;
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         TextView tvChapter = new TextView(new ContextThemeWrapper(getActivity(), R.style.ChapterLabel), null, 0);
         tvChapter.setId(chapter.getId());
         tvChapter.setText(chapter.getName());
+        layoutParams.setMargins(0, 15, 0, 15);
         mainLL.addView(tvChapter, layoutParams);
     }
 
     private void createChapterTaskCheckBox(ChapterTask chapterTask) {
-        LinearLayout.LayoutParams layoutParams = getLayoutParamByGravity(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.LEFT);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         final CheckBox cbChapterTask = new CheckBox(new ContextThemeWrapper(getActivity(), R.style.Checkbox), null, 0);
+//        cbChapterTask.setButtonDrawable(R.drawable.checkbox);
+        layoutParams.setMargins(0, 15, 0, 15);
         cbChapterTask.setId(chapterTask.getId());
         cbChapterTask.setText(chapterTask.getName());
         if (chapterTask.isDone()) {
@@ -170,12 +171,5 @@ public class ChapterFragment extends Fragment {
         Log.d(DBHelper.NAME, "DataBase updated!");
     }
 
-    private LinearLayout.LayoutParams getLayoutParamByGravity(int width, int height, int gravity) {
-        LinearLayout.LayoutParams layoutParams
-                = new LinearLayout.LayoutParams(width, height);
-        layoutParams.gravity = gravity;
-        layoutParams.topMargin = 20;
-        return layoutParams;
-    }
 
 }

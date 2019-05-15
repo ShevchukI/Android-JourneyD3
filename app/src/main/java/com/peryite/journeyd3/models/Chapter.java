@@ -10,6 +10,7 @@ public class Chapter {
     private int id;
     private String name;
     private ArrayList<ChapterTask> tasks;
+    private Reward reward;
 
     public Chapter() {
     }
@@ -45,5 +46,13 @@ public class Chapter {
 
     public void setTasks(ArrayList<ChapterTask> tasks) {
         this.tasks = tasks;
+    }
+
+    public Reward getReward() {
+        return reward;
+    }
+
+    public void setReward(Reward reward) {
+        this.reward = reward;
     }
 }

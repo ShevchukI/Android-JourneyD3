@@ -28,10 +28,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
         chapterFragment = new ChapterFragment();
-        dbHelper = new DBHelper(this);
-        bundle = new Bundle();
-        bundle.putParcelableArrayList(Chapter.TOKEN, (ArrayList) dbHelper.getAllChapters());
-        chapterFragment.setArguments(bundle);
+//        dbHelper = new DBHelper(this);
+//        bundle = new Bundle();
+//        bundle.putParcelableArrayList(Chapter.TOKEN, (ArrayList) dbHelper.getAllChapters());
+//        chapterFragment.setArguments(bundle);
         Toolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
         drawer = findViewById(R.id.main_drawer_layout);

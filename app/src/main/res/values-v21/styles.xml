@@ -1,24 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
-    <style name="Checkbox" parent="@style/Widget.AppCompat.CompoundButton.CheckBox">
-        <item name="android:shape">rectangle</item>
-        <item name="android:strokeWidth">5</item>
-        <item name="android:strokeColor">@color/colorBorder</item>
+    <style name="Checkbox" parent="Widget.AppCompat.CompoundButton.CheckBox">
+
+        <!--<item name="android:button">@drawable/ic_reward</item>-->
+        <!--<item name="android:shape">rectangle</item>-->
+        <!--<item name="android:strokeWidth">5</item>-->
+        <!--<item name="android:strokeColor">@color/colorBorder</item>-->
         <item name="android:background">@drawable/btn_background</item>
         <item name="android:colorControlNormal">@color/colorBorder</item>
-        <item name="android:colorControlActivated">@color/colorTextJD3</item>
-        <item name="android:colorControlHighlight">@color/colorPlannerTitle</item>
+        <!--<item name="android:colorControlActivated">@color/colorTextJD3</item>-->
+        <!--<item name="android:colorControlHighlight">@color/colorPlannerTitle</item>-->
         <item name="android:textAppearance">@style/TextAppearance.AppCompat</item>
+        <item name="android:padding">10dp</item>
+        <!--<item name="android:gravity">center</item>-->
     </style>
 
     <style name="ChapterLabel">
         <item name="android:textColor">@color/colorTextJD3</item>
-        <item name="android:layout_gravity">center</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">20dp</item>
     </style>
+
 </resources>

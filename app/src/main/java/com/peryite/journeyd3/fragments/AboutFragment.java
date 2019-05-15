@@ -19,7 +19,6 @@ public class AboutFragment extends Fragment {
 
     private View view;
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {

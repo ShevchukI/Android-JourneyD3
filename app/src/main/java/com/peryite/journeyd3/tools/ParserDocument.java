@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.peryite.journeyd3.models.Chapter;
 import com.peryite.journeyd3.models.ChapterTask;
+import com.peryite.journeyd3.models.Reward;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -36,6 +37,10 @@ public class ParserDocument {
             chapters.add(new Chapter(headers.get(i).text()));
             chapters.get(i).setTasks(getTasksByChapter(i + 1));
         }
+        ArrayList<Reward> rewards = getAllRewards();
+        for(int i = 0; i<chapters.size(); i ++){
+            chapters.get(i).setReward(rewards.get(i));
+        }
         Log.d(LogTag.RESULT, "get Chapters from document");
         return chapters;
     }
@@ -49,4 +54,14 @@ public class ParserDocument {
         }
         return chapterTasks;
     }
+
+    private ArrayList<Reward> getAllRewards(){
+        ArrayList<Reward> rewards = new ArrayList<>();
+        Elements elementRewards = document.getElementsByClass("rewards");
+        for(Element reward :elementRewards){
+            rewards.add(new Reward(reward.text(), false));
+        }
+        return rewards;
+    }
+
 }
