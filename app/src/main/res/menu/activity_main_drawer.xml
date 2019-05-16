@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_chapter"
+            android:icon="@drawable/ic_task"
+            android:title="@string/menu_chapter" />
+        <item
+            android:id="@+id/nav_conquest"
+            android:icon="@drawable/ic_conquest"
+            android:title="@string/menu_conquest" />
+        <item
+            android:id="@+id/nav_reward"
+            android:icon="@drawable/ic_reward"
+            android:title="@string/menu_reward" />
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_credits"
+                android:icon="@drawable/ic_info"
+                android:title="@string/menu_credits" />
+        </menu>
+    </item>
+
+</menu>
