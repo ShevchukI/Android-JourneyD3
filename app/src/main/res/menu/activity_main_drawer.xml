@@ -18,6 +18,19 @@
             android:title="@string/menu_reward" />
     </group>
 
+    <item android:title="Action">
+        <menu>
+            <item
+                android:id="@+id/nav_action_restart"
+                android:icon="@drawable/ic_restart_journey"
+                android:title="@string/menu_action_restart" />
+            <item
+                android:id="@+id/nav_action_update"
+                android:icon="@drawable/ic_update_journey"
+                android:title="@string/menu_action_update" />
+        </menu>
+    </item>
+
     <item android:title="Communicate">
         <menu>
             <item

@@ -11,6 +11,8 @@
     <string name="menu_conquest">Conquest</string>
     <string name="menu_reward">Reward</string>
     <string name="menu_credits">Credits</string>
+    <string name="menu_action_restart">Restart</string>
+    <string name="menu_action_update">Update</string>
 
     <string name="start_journey">Start Journey</string>
 

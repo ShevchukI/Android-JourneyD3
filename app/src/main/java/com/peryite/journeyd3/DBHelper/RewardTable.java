@@ -1,5 +1,6 @@
 package com.peryite.journeyd3.DBHelper;
 
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.peryite.journeyd3.DBHelper.DAO.TableRepository;
@@ -38,4 +39,11 @@ class RewardTable implements TableRepository {
     public void drop(SQLiteDatabase database) {
         database.execSQL(DROP_TABLE);
     }
+
+    @Override
+    public int getCountRecords(SQLiteDatabase database) {
+        return (int) DatabaseUtils.queryNumEntries(database, TABLE_NAME);
+    }
+
+
 }

@@ -42,12 +42,27 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void deleteAllRecords(){
-        SQLiteDatabase db = this.getReadableDatabase();
+    public void deleteAllRecords() {
+        SQLiteDatabase db = this.getWritableDatabase();
         conquestTable.delete(db);
         taskTable.delete(db);
         chapterTable.delete(db);
         rewardTable.delete(db);
         db.close();
+    }
+
+    public boolean checkRecords() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        if (conquestTable.getCountRecords(db) != 0) {
+            return true;
+        } else if (taskTable.getCountRecords(db) != 0) {
+            return true;
+        } else if (chapterTable.getCountRecords(db) != 0) {
+            return true;
+        } else if (rewardTable.getCountRecords(db) != 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

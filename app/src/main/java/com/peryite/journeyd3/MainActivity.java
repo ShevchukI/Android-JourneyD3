@@ -1,5 +1,6 @@
 package com.peryite.journeyd3;
 
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -12,13 +13,14 @@ import android.support.v4.widget.DrawerLayout;
 
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 
+import com.peryite.journeyd3.DBHelper.DBHelper;
 import com.peryite.journeyd3.fragments.FragmentChapter;
 import com.peryite.journeyd3.fragments.FragmentConquest;
 import com.peryite.journeyd3.fragments.FragmentCredits;
 import com.peryite.journeyd3.fragments.FragmentReward;
 import com.peryite.journeyd3.tools.LogTag;
+import com.peryite.journeyd3.tools.Parser;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -31,6 +33,10 @@ public class MainActivity extends AppCompatActivity
     private FragmentConquest fragmentConquest;
     private FragmentReward fragmentReward;
     private FragmentCredits fragmentCredits;
+    private DBHelper dbHelper;
+
+    private SharedPreferences sharedPreferences;
+    private final static String TITLE = "title";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +56,17 @@ public class MainActivity extends AppCompatActivity
         fragmentConquest = new FragmentConquest();
         fragmentReward = new FragmentReward();
         fragmentCredits = new FragmentCredits();
+
+        dbHelper = new DBHelper(this);
+
+        if(dbHelper.checkRecords()){
+            Log.d(LogTag.INFORMATION, "database not empty");
+
+        } else {
+            Log.d(LogTag.INFORMATION, "database empty");
+            Parser parser = new Parser();
+
+        }
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.container,
@@ -84,6 +101,10 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_reward) {
             fragmentReward = FragmentReward.newInstance("test newInstance");
             fragmentTransaction.replace(R.id.container, fragmentReward);
+        } else if (id == R.id.nav_action_restart) {
+
+        } else if (id == R.id.nav_action_update) {
+
         } else if (id == R.id.nav_credits) {
             fragmentTransaction.replace(R.id.container, fragmentCredits);
         }
@@ -103,5 +124,31 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(String text) {
         Log.d(LogTag.RESULT, text);
+    }
+
+    private void restartJourney(){
+
+    }
+
+    private void updateJourney(){
+
+    }
+
+    private void parsingData(){
+        Parser parser = new Parser();
+        saveTitle(parser.getTitle());
+
+    }
+
+    private void saveTitle(String title){
+        sharedPreferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(TITLE, title);
+        editor.commit();
+    }
+
+    private String loadTitle(){
+        sharedPreferences = getPreferences(MODE_PRIVATE);
+        return sharedPreferences.getString(TITLE, "");
     }
 }

@@ -63,5 +63,8 @@ public class Parser {
         return chapterTasks;
     }
 
+    public String getTitle(){
+       return document.title();
+    }
 
 }
