@@ -20,7 +20,7 @@ public class Parser {
 
     public Parser() {
         try {
-            this.document = Jsoup.connect(URL).get();
+            document = Jsoup.connect(URL).get();
             Log.d(LogTag.RESULT, "document connected by URL");
         } catch (IOException e) {
             Log.d(LogTag.ERROR, "Error: " + e.getMessage() + "\n");

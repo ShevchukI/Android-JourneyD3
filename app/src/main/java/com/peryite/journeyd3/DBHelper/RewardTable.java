@@ -1,9 +1,11 @@
 package com.peryite.journeyd3.DBHelper;
 
+import android.content.ContentValues;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.peryite.journeyd3.DBHelper.DAO.TableRepository;
+import com.peryite.journeyd3.models.Reward;
 
 class RewardTable implements TableRepository {
 
@@ -45,5 +47,17 @@ class RewardTable implements TableRepository {
         return (int) DatabaseUtils.queryNumEntries(database, TABLE_NAME);
     }
 
+
+    public int insertObject(SQLiteDatabase database, Reward reward){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(NAME, reward.getName());
+        if(reward.isDone()){
+            contentValues.put(DONE, 1);
+        } else {
+            contentValues.put(DONE, 0);
+        }
+        int id = (int) database.insert(TABLE_NAME, null, contentValues);
+        return id;
+    }
 
 }

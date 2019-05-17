@@ -3,12 +3,25 @@ package com.peryite.journeyd3.fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.ContextThemeWrapper;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.peryite.journeyd3.DBHelper.DBHelper;
 import com.peryite.journeyd3.R;
+import com.peryite.journeyd3.models.Chapter;
+import com.peryite.journeyd3.models.Task;
+import com.peryite.journeyd3.tools.LogTag;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,12 +37,16 @@ public class FragmentChapter extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    private static final String ARG_CHAPTER_LIST = "chapterList";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
+    private ArrayList<Chapter> chapterArrayList;
+
     private OnFragmentInteractionListener mListener;
+    private LinearLayout chapterLinear;
 
     public FragmentChapter() {
         // Required empty public constructor
@@ -53,21 +70,45 @@ public class FragmentChapter extends Fragment {
         return fragment;
     }
 
+    public static FragmentChapter newInstance(ArrayList<Chapter> chapterArrayList) {
+        FragmentChapter fragment = new FragmentChapter();
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_CHAPTER_LIST, chapterArrayList);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+//        if (getArguments() != null) {
+////            mParam1 = getArguments().getString(ARG_PARAM1);
+////            mParam2 = getArguments().getString(ARG_PARAM2);
+//            chapterArrayList = (ArrayList<Chapter>) getArguments().getSerializable(ARG_CHAPTER_LIST);
+//            getArguments().remove(ARG_CHAPTER_LIST);
+//        }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        mListener.onFragmentInteraction("test fragment interaction!");
-        return inflater.inflate(R.layout.fragment_chapter, container, false);
+//        mListener.onFragmentInteraction("test fragment interaction!");
+        View view = inflater.inflate(R.layout.fragment_chapter, container, false);
+        chapterLinear = view.findViewById(R.id.chapter_linear);
+        if (getArguments() != null) {
+//            mParam1 = getArguments().getString(ARG_PARAM1);
+//            mParam2 = getArguments().getString(ARG_PARAM2);
+            chapterArrayList = (ArrayList<Chapter>) getArguments().getSerializable(ARG_CHAPTER_LIST);
+            getArguments().remove(ARG_CHAPTER_LIST);
+        }
+        mListener.onFragmentInteraction(chapterLinear);
+        chapterLinear.removeAllViews();
+        if(chapterArrayList!=null) {
+            createFields();
+        }
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -94,6 +135,12 @@ public class FragmentChapter extends Fragment {
         mListener = null;
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -107,6 +154,58 @@ public class FragmentChapter extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+
         void onFragmentInteraction(String text);
+
+        void onFragmentInteraction(ArrayList<Chapter> chapterArrayList);
+        void onFragmentInteraction(LinearLayout chapterLinear);
     }
+
+    private void createFields() {
+        for (Chapter chapter : chapterArrayList) {
+            createChapterLabel(chapter);
+            for (Task task : chapter.getTasks()) {
+                createChapterTaskCheckBox(task);
+            }
+        }
+    }
+
+    private void createChapterLabel(Chapter chapter) {
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        layoutParams.gravity = Gravity.CENTER;
+        TextView tvChapter = new TextView(new ContextThemeWrapper(getActivity(), R.style.TextView), null, 0);
+        tvChapter.setId(chapter.getId());
+        tvChapter.setText(chapter.getName());
+        layoutParams.setMargins(0, 15, 0, 15);
+        chapterLinear.addView(tvChapter, layoutParams);
+    }
+
+    private void createChapterTaskCheckBox(Task task) {
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        final CheckBox cbTask = new CheckBox(new ContextThemeWrapper(getActivity(), R.style.CheckBox), null, 0);
+//        cbChapterTask.setButtonDrawable(R.drawable.checkbox);
+        layoutParams.setMargins(0, 15, 0, 15);
+        cbTask.setId(task.getId());
+        cbTask.setText(task.getName());
+        if (task.isDone()) {
+            cbTask.setChecked(true);
+        } else {
+            cbTask.setChecked(false);
+        }
+        cbTask.setOnClickListener(v -> {
+            for (Chapter chapter : chapterArrayList) {
+                for (Task chapterTask : chapter.getTasks()) {
+                    if (cbTask.getId() == chapterTask.getId()) {
+                        chapterTask.setDone(cbTask.isChecked());
+                        Log.d(LogTag.CLICK, "Task (id: " + chapterTask.getId() + " , name: " + chapterTask.getName()
+                                + ") changed! New status: " + chapterTask.isDone());
+                        mListener.onFragmentInteraction(chapterArrayList);
+                        return;
+                    }
+                }
+            }
+        });
+        chapterLinear.addView(cbTask, layoutParams);
+    }
+
 }

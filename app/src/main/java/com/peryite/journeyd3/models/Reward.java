@@ -13,6 +13,10 @@ public class Reward {
         this.done = done;
     }
 
+    public Reward(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }

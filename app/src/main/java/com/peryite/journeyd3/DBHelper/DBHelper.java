@@ -3,6 +3,13 @@ package com.peryite.journeyd3.DBHelper;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import com.peryite.journeyd3.models.Chapter;
+import com.peryite.journeyd3.models.Task;
+import com.peryite.journeyd3.tools.LogTag;
+
+import java.util.ArrayList;
 
 public class DBHelper extends SQLiteOpenHelper {
 
@@ -64,5 +71,38 @@ public class DBHelper extends SQLiteOpenHelper {
         } else {
             return false;
         }
+    }
+
+    public void fillDatabase(ArrayList<Chapter> chapterArrayList) {
+        SQLiteDatabase database = this.getWritableDatabase();
+        for(Chapter chapter: chapterArrayList){
+            chapter.getReward().setId(rewardTable.insertObject(database, chapter.getReward()));
+            chapter.setId(chapterTable.insertObject(database, chapter));
+            for(Task task: chapter.getTasks()){
+                taskTable.insertObject(database, task, chapter.getId());
+            }
+        }
+    }
+
+    public ArrayList<Chapter> getAllChapters() {
+        SQLiteDatabase database = this.getReadableDatabase();
+        ArrayList<Chapter> chapters = chapterTable.selectAllChapter(database);
+        for (Chapter chapter : chapters) {
+            chapter.setTasks(taskTable.selectTaskByChapterId(database, chapter.getId()));
+        }
+        database.close();
+        return chapters;
+    }
+
+    public int updateChapter(ArrayList<Chapter> chapterList) {
+        SQLiteDatabase database = this.getReadableDatabase();
+        int updateRowCount = 0;
+        for (Chapter chapter : chapterList) {
+            for (Task chapterTask : chapter.getTasks()) {
+                updateRowCount += taskTable.updateTask(database, chapterTask);
+            }
+        }
+        Log.d(LogTag.RESULT, "updates row count " + updateRowCount);
+        return updateRowCount;
     }
 }

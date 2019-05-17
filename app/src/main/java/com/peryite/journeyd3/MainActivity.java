@@ -13,14 +13,18 @@ import android.support.v4.widget.DrawerLayout;
 
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.widget.LinearLayout;
 
 import com.peryite.journeyd3.DBHelper.DBHelper;
 import com.peryite.journeyd3.fragments.FragmentChapter;
 import com.peryite.journeyd3.fragments.FragmentConquest;
 import com.peryite.journeyd3.fragments.FragmentCredits;
 import com.peryite.journeyd3.fragments.FragmentReward;
+import com.peryite.journeyd3.models.Chapter;
 import com.peryite.journeyd3.tools.LogTag;
 import com.peryite.journeyd3.tools.Parser;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -37,6 +41,9 @@ public class MainActivity extends AppCompatActivity
 
     private SharedPreferences sharedPreferences;
     private final static String TITLE = "title";
+    private ArrayList<Chapter> chapterArrayList;
+
+    private LinearLayout chapterLinear;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,13 +66,18 @@ public class MainActivity extends AppCompatActivity
 
         dbHelper = new DBHelper(this);
 
-        if(dbHelper.checkRecords()){
+        if (dbHelper.checkRecords()) {
             Log.d(LogTag.INFORMATION, "database not empty");
-
+            chapterArrayList = dbHelper.getAllChapters();
+            fragmentChapter = fragmentChapter.newInstance(chapterArrayList);
         } else {
             Log.d(LogTag.INFORMATION, "database empty");
-            Parser parser = new Parser();
-
+            new Thread(() -> {
+                Parser parser = new Parser();
+                chapterArrayList = parser.getChaptersAndTasksArray();
+                dbHelper.fillDatabase(chapterArrayList);
+                fragmentChapter = fragmentChapter.newInstance(chapterArrayList);
+            }).start();
         }
 
         if (savedInstanceState == null) {
@@ -95,11 +107,15 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_chapter) {
+            if(chapterLinear!=null){
+                chapterLinear.removeAllViews();
+            }
+            fragmentChapter = fragmentChapter.newInstance(chapterArrayList);
             fragmentTransaction.replace(R.id.container, fragmentChapter);
         } else if (id == R.id.nav_conquest) {
             fragmentTransaction.replace(R.id.container, fragmentConquest);
         } else if (id == R.id.nav_reward) {
-            fragmentReward = FragmentReward.newInstance("test newInstance");
+//            fragmentReward = FragmentReward.newInstance("test newInstance");
             fragmentTransaction.replace(R.id.container, fragmentReward);
         } else if (id == R.id.nav_action_restart) {
 
@@ -115,6 +131,11 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        saveJourney();
+    }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
@@ -126,29 +147,45 @@ public class MainActivity extends AppCompatActivity
         Log.d(LogTag.RESULT, text);
     }
 
-    private void restartJourney(){
+    @Override
+    public void onFragmentInteraction(ArrayList<Chapter> chapterArrayList) {
+        this.chapterArrayList = chapterArrayList;
+    }
+
+    @Override
+    public void onFragmentInteraction(LinearLayout chapterLinear) {
+        this.chapterLinear = chapterLinear;
+    }
+
+    private void restartJourney() {
 
     }
 
-    private void updateJourney(){
+    private void updateJourney() {
 
     }
 
-    private void parsingData(){
+    private void parsingData() {
         Parser parser = new Parser();
         saveTitle(parser.getTitle());
 
     }
 
-    private void saveTitle(String title){
+    private void saveTitle(String title) {
         sharedPreferences = getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(TITLE, title);
         editor.commit();
     }
 
-    private String loadTitle(){
+    private String loadTitle() {
         sharedPreferences = getPreferences(MODE_PRIVATE);
         return sharedPreferences.getString(TITLE, "");
     }
+
+    private void saveJourney() {
+        dbHelper.updateChapter(chapterArrayList);
+        Log.d(LogTag.RESULT, "DataBase updated!");
+    }
+
 }
