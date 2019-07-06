@@ -3,7 +3,6 @@ package com.peryite.journeyd3.fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
@@ -15,7 +14,6 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.peryite.journeyd3.DBHelper.DBHelper;
 import com.peryite.journeyd3.R;
 import com.peryite.journeyd3.models.Chapter;
 import com.peryite.journeyd3.models.Task;

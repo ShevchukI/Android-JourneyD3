@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity
                     fragmentChapter).commit();
             navigationView.setCheckedItem(R.id.nav_chapter);
         }
+
     }
 
     @Override
@@ -107,21 +108,26 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_chapter) {
+            Log.d(LogTag.CLICK, "Click: chapter button ");
+
             if(chapterLinear!=null){
                 chapterLinear.removeAllViews();
             }
             fragmentChapter = fragmentChapter.newInstance(chapterArrayList);
             fragmentTransaction.replace(R.id.container, fragmentChapter);
         } else if (id == R.id.nav_conquest) {
+            Log.d(LogTag.CLICK, "Click: conquest button ");
             fragmentTransaction.replace(R.id.container, fragmentConquest);
         } else if (id == R.id.nav_reward) {
+            Log.d(LogTag.CLICK, "Click: reward button ");
 //            fragmentReward = FragmentReward.newInstance("test newInstance");
             fragmentTransaction.replace(R.id.container, fragmentReward);
         } else if (id == R.id.nav_action_restart) {
-
+            Log.d(LogTag.CLICK, "Click: restart button ");
         } else if (id == R.id.nav_action_update) {
-
+            Log.d(LogTag.CLICK, "Click: update button ");
         } else if (id == R.id.nav_credits) {
+            Log.d(LogTag.CLICK, "Click: credits button ");
             fragmentTransaction.replace(R.id.container, fragmentCredits);
         }
         fragmentTransaction.commit();
