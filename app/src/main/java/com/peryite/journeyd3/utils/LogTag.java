@@ -1,8 +1,5 @@
-package com.peryite.journeyd3.tools;
+package com.peryite.journeyd3.utils;
 
-
-import android.database.Cursor;
-import android.util.Log;
 
 public class LogTag {
     public final static String CLICK = "click";

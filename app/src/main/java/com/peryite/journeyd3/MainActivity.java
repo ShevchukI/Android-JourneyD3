@@ -21,8 +21,8 @@ import com.peryite.journeyd3.fragments.FragmentConquest;
 import com.peryite.journeyd3.fragments.FragmentCredits;
 import com.peryite.journeyd3.fragments.FragmentReward;
 import com.peryite.journeyd3.models.Chapter;
-import com.peryite.journeyd3.tools.LogTag;
-import com.peryite.journeyd3.tools.Parser;
+import com.peryite.journeyd3.utils.LogTag;
+import com.peryite.journeyd3.utils.Parser;
 
 import java.util.ArrayList;
 

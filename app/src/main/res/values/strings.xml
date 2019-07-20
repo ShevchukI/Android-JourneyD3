@@ -16,6 +16,9 @@
 
     <string name="start_journey">Start Journey</string>
 
+    <!--string formatted-->
+    <string name="chapter_complete_vs_all_task">(%1$d/%2$d)</string>
+
     <!--credits-->
     <string name="credits_name">Credits</string>
     <string name="credits_mobile_app_name">Mobile Application</string>

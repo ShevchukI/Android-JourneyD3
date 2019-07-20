@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.peryite.journeyd3.R;
-import com.peryite.journeyd3.tools.LogTag;
+import com.peryite.journeyd3.utils.LogTag;
 
 /**
  * A simple {@link Fragment} subclass.

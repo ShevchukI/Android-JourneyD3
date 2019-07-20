@@ -8,7 +8,7 @@ import android.util.Log;
 
 import com.peryite.journeyd3.DBHelper.DAO.TableRepository;
 import com.peryite.journeyd3.models.Task;
-import com.peryite.journeyd3.tools.LogTag;
+import com.peryite.journeyd3.utils.LogTag;
 
 import java.util.ArrayList;
 

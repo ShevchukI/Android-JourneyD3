@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.peryite.journeyd3.R;
 import com.peryite.journeyd3.models.Chapter;
 import com.peryite.journeyd3.models.Task;
-import com.peryite.journeyd3.tools.LogTag;
+import com.peryite.journeyd3.utils.LogTag;
 
 import java.util.ArrayList;
 
