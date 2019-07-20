@@ -1,12 +1,19 @@
 package com.peryite.journeyd3.models;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+
+@Data
+@ToString
+@EqualsAndHashCode
 public class Reward {
     private int id;
     private String name;
     private boolean done;
-
-    public Reward() {
-    }
 
     public Reward(String name, boolean done) {
         this.name = name;
@@ -15,29 +22,5 @@ public class Reward {
 
     public Reward(int id) {
         this.id = id;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public boolean isDone() {
-        return done;
-    }
-
-    public void setDone(boolean done) {
-        this.done = done;
     }
 }
