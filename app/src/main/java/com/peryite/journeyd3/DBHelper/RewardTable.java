@@ -47,7 +47,6 @@ class RewardTable implements TableRepository {
         return (int) DatabaseUtils.queryNumEntries(database, TABLE_NAME);
     }
 
-
     public int insertObject(SQLiteDatabase database, Reward reward){
         ContentValues contentValues = new ContentValues();
         contentValues.put(NAME, reward.getName());
