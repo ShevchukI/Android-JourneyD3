@@ -24,7 +24,6 @@ import com.peryite.journeyd3.models.Chapter;
 import com.peryite.journeyd3.utils.LogTag;
 import com.peryite.journeyd3.utils.Parser;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
@@ -72,14 +71,14 @@ public class MainActivity extends AppCompatActivity
         if (dbHelper.checkRecords()) {
             Log.d(LogTag.INFORMATION, "database not empty");
             chapterList = dbHelper.getAllChapters();
-            fragmentChapter = fragmentChapter.newInstance(chapterList);
+            fragmentChapter = FragmentChapter.newInstance(chapterList);
         } else {
             Log.d(LogTag.INFORMATION, "database empty");
             new Thread(() -> {
                 Parser parser = new Parser();
                 chapterList = parser.getChaptersAndTasksArray();
                 dbHelper.fillDatabase(chapterList);
-                fragmentChapter = fragmentChapter.newInstance(chapterList);
+                fragmentChapter = FragmentChapter.newInstance(chapterList);
             }).start();
         }
 
@@ -150,16 +149,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
         Log.d(LogTag.RESULT, "onFragmentInteraction");
-    }
-
-    @Override
-    public void onFragmentInteraction(String text) {
-        Log.d(LogTag.RESULT, text);
-    }
-
-    @Override
-    public void onFragmentInteraction(List<Chapter> chapterList) {
-        this.chapterList = chapterList;
     }
 
     @Override
