@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
@@ -15,11 +17,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.peryite.journeyd3.R;
+import com.peryite.journeyd3.adapters.ChapterRecyclerAdapter;
 import com.peryite.journeyd3.models.Chapter;
 import com.peryite.journeyd3.models.Task;
+import com.peryite.journeyd3.services.ChapterService;
+import com.peryite.journeyd3.utils.AppChapterComponent;
 import com.peryite.journeyd3.utils.LogTag;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import butterknife.BindView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,11 +48,21 @@ public class FragmentChapter extends Fragment {
 
     private static final String ARG_CHAPTER_LIST = "chapterList";
 
+    //    @BindView(R.id.rv_chapter_recycler)
+//    RecyclerView recyclerView;
+    RecyclerView recyclerView;
+    View view;
+
+    ChapterRecyclerAdapter adapter;
+
+//    @Inject
+    ChapterService chapterService;
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
-    private ArrayList<Chapter> chapterArrayList;
+    private List<Chapter> chapterList;
 
     private OnFragmentInteractionListener mListener;
     private LinearLayout chapterLinear;
@@ -68,10 +89,10 @@ public class FragmentChapter extends Fragment {
         return fragment;
     }
 
-    public static FragmentChapter newInstance(ArrayList<Chapter> chapterArrayList) {
+    public static FragmentChapter newInstance(List<Chapter> chapterList) {
         FragmentChapter fragment = new FragmentChapter();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_CHAPTER_LIST, chapterArrayList);
+        args.putSerializable(ARG_CHAPTER_LIST, (Serializable) chapterList);
         fragment.setArguments(args);
         return fragment;
     }
@@ -82,7 +103,7 @@ public class FragmentChapter extends Fragment {
 //        if (getArguments() != null) {
 ////            mParam1 = getArguments().getString(ARG_PARAM1);
 ////            mParam2 = getArguments().getString(ARG_PARAM2);
-//            chapterArrayList = (ArrayList<Chapter>) getArguments().getSerializable(ARG_CHAPTER_LIST);
+//            chapterList = (ArrayList<Chapter>) getArguments().getSerializable(ARG_CHAPTER_LIST);
 //            getArguments().remove(ARG_CHAPTER_LIST);
 //        }
 
@@ -93,20 +114,33 @@ public class FragmentChapter extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 //        mListener.onFragmentInteraction("test fragment interaction!");
-        View view = inflater.inflate(R.layout.fragment_chapter, container, false);
-        chapterLinear = view.findViewById(R.id.chapter_linear);
+        view = inflater.inflate(R.layout.fragment_chapter, container, false);
+//        chapterLinear = view.findViewById(R.id.chapter_linear);
         if (getArguments() != null) {
 //            mParam1 = getArguments().getString(ARG_PARAM1);
 //            mParam2 = getArguments().getString(ARG_PARAM2);
-            chapterArrayList = (ArrayList<Chapter>) getArguments().getSerializable(ARG_CHAPTER_LIST);
+            chapterList = (ArrayList<Chapter>) getArguments().getSerializable(ARG_CHAPTER_LIST);
             getArguments().remove(ARG_CHAPTER_LIST);
         }
         mListener.onFragmentInteraction(chapterLinear);
-        chapterLinear.removeAllViews();
-        if(chapterArrayList!=null) {
-            createFields();
+//        chapterLinear.removeAllViews();
+        if (chapterList != null) {
+//            createFields();
+            initViews();
         }
+//        initViews();
         return view;
+    }
+
+    public void initViews() {
+//        AppChapterComponent.getComponent().injectsChapterService(this);
+        chapterService = new ChapterService();
+        recyclerView = view.findViewById(R.id.rv_chapter_recycler);
+        adapter = new ChapterRecyclerAdapter(chapterList, getContext());
+        adapter.setChapterService(chapterService);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(adapter);
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -155,12 +189,13 @@ public class FragmentChapter extends Fragment {
 
         void onFragmentInteraction(String text);
 
-        void onFragmentInteraction(ArrayList<Chapter> chapterArrayList);
+        void onFragmentInteraction(List<Chapter> chapterArrayList);
+
         void onFragmentInteraction(LinearLayout chapterLinear);
     }
 
     private void createFields() {
-        for (Chapter chapter : chapterArrayList) {
+        for (Chapter chapter : chapterList) {
             createChapterLabel(chapter);
             for (Task task : chapter.getTasks()) {
                 createChapterTaskCheckBox(task);
@@ -191,13 +226,13 @@ public class FragmentChapter extends Fragment {
             cbTask.setChecked(false);
         }
         cbTask.setOnClickListener(v -> {
-            for (Chapter chapter : chapterArrayList) {
+            for (Chapter chapter : chapterList) {
                 for (Task chapterTask : chapter.getTasks()) {
                     if (cbTask.getId() == chapterTask.getId()) {
                         chapterTask.setDone(cbTask.isChecked());
                         Log.d(LogTag.CLICK, "Task (id: " + chapterTask.getId() + " , name: " + chapterTask.getName()
                                 + ") changed! New status: " + chapterTask.isDone());
-                        mListener.onFragmentInteraction(chapterArrayList);
+                        mListener.onFragmentInteraction(chapterList);
                         return;
                     }
                 }

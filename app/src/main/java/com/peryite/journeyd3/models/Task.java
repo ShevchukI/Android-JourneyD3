@@ -1,5 +1,7 @@
 package com.peryite.journeyd3.models;
 
+import com.peryite.journeyd3.adapters.ChapterRecyclerAdapter;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -18,5 +20,6 @@ public class Task {
         this.name = name;
         this.done = done;
     }
+
 
 }

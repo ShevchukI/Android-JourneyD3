@@ -10,6 +10,7 @@ import com.peryite.journeyd3.models.Task;
 import com.peryite.journeyd3.utils.LogTag;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class DBHelper extends SQLiteOpenHelper {
 
@@ -73,9 +74,9 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void fillDatabase(ArrayList<Chapter> chapterArrayList) {
+    public void fillDatabase(List<Chapter> chapterList) {
         SQLiteDatabase database = this.getWritableDatabase();
-        for(Chapter chapter: chapterArrayList){
+        for(Chapter chapter: chapterList){
             chapter.getReward().setId(rewardTable.insertObject(database, chapter.getReward()));
             chapter.setId(chapterTable.insertObject(database, chapter));
             for(Task task: chapter.getTasks()){
@@ -94,7 +95,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return chapters;
     }
 
-    public int updateChapter(ArrayList<Chapter> chapterList) {
+    public int updateChapter(List<Chapter> chapterList) {
         SQLiteDatabase database = this.getReadableDatabase();
         int updateRowCount = 0;
         for (Chapter chapter : chapterList) {

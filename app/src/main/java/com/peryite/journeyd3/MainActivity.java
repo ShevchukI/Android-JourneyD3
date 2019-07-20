@@ -25,6 +25,7 @@ import com.peryite.journeyd3.utils.LogTag;
 import com.peryite.journeyd3.utils.Parser;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity
 
     private SharedPreferences sharedPreferences;
     private final static String TITLE = "title";
-    private ArrayList<Chapter> chapterArrayList;
+    private List<Chapter> chapterList;
 
     private LinearLayout chapterLinear;
 
@@ -66,23 +67,26 @@ public class MainActivity extends AppCompatActivity
 
         dbHelper = new DBHelper(this);
 
+
+
         if (dbHelper.checkRecords()) {
             Log.d(LogTag.INFORMATION, "database not empty");
-            chapterArrayList = dbHelper.getAllChapters();
-            fragmentChapter = fragmentChapter.newInstance(chapterArrayList);
+            chapterList = dbHelper.getAllChapters();
+            fragmentChapter = fragmentChapter.newInstance(chapterList);
         } else {
             Log.d(LogTag.INFORMATION, "database empty");
             new Thread(() -> {
                 Parser parser = new Parser();
-                chapterArrayList = parser.getChaptersAndTasksArray();
-                dbHelper.fillDatabase(chapterArrayList);
-                fragmentChapter = fragmentChapter.newInstance(chapterArrayList);
+                chapterList = parser.getChaptersAndTasksArray();
+                dbHelper.fillDatabase(chapterList);
+                fragmentChapter = fragmentChapter.newInstance(chapterList);
             }).start();
         }
 
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.container,
-                    fragmentChapter).commit();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.container,
+                            fragmentChapter).commit();
             navigationView.setCheckedItem(R.id.nav_chapter);
         }
 
@@ -112,7 +116,7 @@ public class MainActivity extends AppCompatActivity
             if(chapterLinear!=null){
                 chapterLinear.removeAllViews();
             }
-            fragmentChapter = fragmentChapter.newInstance(chapterArrayList);
+            fragmentChapter = fragmentChapter.newInstance(chapterList);
             fragmentTransaction.replace(R.id.container, fragmentChapter);
         } else if (id == R.id.nav_conquest) {
             Log.d(LogTag.CLICK, "Click: conquest button ");
@@ -154,8 +158,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onFragmentInteraction(ArrayList<Chapter> chapterArrayList) {
-        this.chapterArrayList = chapterArrayList;
+    public void onFragmentInteraction(List<Chapter> chapterList) {
+        this.chapterList = chapterList;
     }
 
     @Override
@@ -190,7 +194,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void saveJourney() {
-        dbHelper.updateChapter(chapterArrayList);
+        dbHelper.updateChapter(chapterList);
         Log.d(LogTag.RESULT, "DataBase updated!");
     }
 

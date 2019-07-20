@@ -11,26 +11,32 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/season_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            style="@style/TextView"/>
-
-        <ScrollView
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_chapter_recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <LinearLayout
-                android:id="@+id/chapter_linear"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+        </android.support.v7.widget.RecyclerView>
+        <!--<TextView-->
+            <!--android:id="@+id/season_title"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:gravity="center"-->
+            <!--style="@style/TextView"/>-->
 
-            </LinearLayout>
+        <!--<ScrollView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent">-->
 
-        </ScrollView>
+            <!--<LinearLayout-->
+                <!--android:id="@+id/chapter_linear"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="vertical">-->
+
+            <!--</LinearLayout>-->
+
+        <!--</ScrollView>-->
 
     </LinearLayout>
 
