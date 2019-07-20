@@ -11,8 +11,14 @@
         <item name="android:textColor">@color/colorAccent</item>
     </style>
 
+    <style name="TaskText">
+        <item name="android:textSize">35sp</item>
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
     <style name="CheckBox" parent="Widget.AppCompat.CompoundButton.CheckBox">
         <item name="android:background">@drawable/button</item>
+        <!--<item name="android:button">@drawable/check_box</item>-->
         <item name="android:colorControlNormal">@color/colorBorder</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat</item>
         <item name="android:padding">10dp</item>
