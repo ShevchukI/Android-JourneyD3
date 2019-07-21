@@ -3,13 +3,11 @@ package com.peryite.journeyd3.adapters;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatCheckBox;
-import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.bignerdranch.expandablerecyclerview.ChildViewHolder;
 import com.bignerdranch.expandablerecyclerview.ExpandableRecyclerAdapter;
@@ -18,17 +16,16 @@ import com.peryite.journeyd3.R;
 import com.peryite.journeyd3.models.Chapter;
 import com.peryite.journeyd3.models.Task;
 import com.peryite.journeyd3.services.ChapterService;
-import com.peryite.journeyd3.utils.AppChapterComponent;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 public class ChapterRecyclerAdapter extends ExpandableRecyclerAdapter<Chapter, Task,
         ChapterRecyclerAdapter.ChapterViewHolder, ChapterRecyclerAdapter.TaskViewHolder> {
+
 
 
     ChapterService chapterService;
@@ -50,7 +47,7 @@ public class ChapterRecyclerAdapter extends ExpandableRecyclerAdapter<Chapter, T
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(ChapterRecyclerAdapter.class.getSimpleName(), "bind: parent " );
+                Log.d(ChapterRecyclerAdapter.class.getSimpleName(), "bind: parent ");
             }
         });
         return new ChapterViewHolder(view);
@@ -63,7 +60,7 @@ public class ChapterRecyclerAdapter extends ExpandableRecyclerAdapter<Chapter, T
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(ChapterRecyclerAdapter.class.getSimpleName(), "bind: child " );
+                Log.d(ChapterRecyclerAdapter.class.getSimpleName(), "bind: child ");
             }
         });
         return new TaskViewHolder(view);
@@ -80,46 +77,43 @@ public class ChapterRecyclerAdapter extends ExpandableRecyclerAdapter<Chapter, T
     }
 
     public class ChapterViewHolder extends ParentViewHolder {
-//        @BindView(R.id.tv_chapter_name)
+        @BindView(R.id.tv_chapter_name)
         AppCompatTextView chapterName;
-//        @BindView(R.id.tv_chapter_count_done)
+        @BindView(R.id.tv_chapter_count_done)
         AppCompatTextView chapterCountDone;
 //        @BindView(R.id.iv_arrow)
 //        AppCompatImageView imageArrow;
 
-        View view;
+//        View view;
+
 
         public ChapterViewHolder(@NonNull View itemView) {
             super(itemView);
-            view = itemView;
-            chapterName = view.findViewById(R.id.tv_chapter_name);
-            chapterCountDone = view.findViewById(R.id.tv_chapter_count_done);
+//            view = itemView;
+            ButterKnife.bind(this, itemView);
         }
 
         public void bind(Chapter chapter) {
             chapterName.setText(chapter.getName());
-            chapterCountDone.setText(view.getResources().getString(R.string.chapter_complete_vs_all_task,
+            chapterCountDone.setText(itemView.getResources().getString(R.string.chapter_complete_vs_all_task,
                     chapterService.getCountChapterDoneTask(chapter),
                     chapterService.getCountChapterAllTask(chapter)));
         }
     }
 
     public class TaskViewHolder extends ChildViewHolder {
-//        @BindView(R.id.chbx_task_complete)
+        @BindView(R.id.chbx_task_complete)
         AppCompatCheckBox taskComplete;
-//        @BindView(R.id.tv_task_name)
+        @BindView(R.id.tv_task_name)
         AppCompatTextView taskName;
 
-        View view;
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
-            view = itemView;
-            taskComplete = view.findViewById(R.id.chbx_task_complete);
-            taskName = view.findViewById(R.id.tv_task_name);
+            ButterKnife.bind(this, itemView);
         }
 
-        public void bind(Task task){
+        public void bind(Task task) {
             taskComplete.setChecked(task.isDone());
             taskName.setText(task.getName());
         }

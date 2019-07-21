@@ -7,25 +7,18 @@ import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.ContextThemeWrapper;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.ProgressBar;
 
 import com.peryite.journeyd3.R;
 import com.peryite.journeyd3.adapters.ChapterRecyclerAdapter;
+import com.peryite.journeyd3.contracts.ChapterContract;
 import com.peryite.journeyd3.models.Chapter;
-import com.peryite.journeyd3.models.Task;
 import com.peryite.journeyd3.services.ChapterService;
-import com.peryite.journeyd3.utils.AppChapterComponent;
-import com.peryite.journeyd3.utils.LogTag;
+import com.peryite.journeyd3.utils.AppAllComponent;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,32 +27,33 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link FragmentChapter.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link FragmentChapter#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class FragmentChapter extends Fragment {
+///**
+// * A simple {@link Fragment} subclass.
+// * Activities that contain this fragment must implement the
+// * {@link FragmentChapter.OnFragmentInteractionListener} interface
+// * to handle interaction events.
+// * Use the {@link FragmentChapter#newInstance} factory method to
+// * create an instance of this fragment.
+// */
+public class FragmentChapter extends Fragment implements ChapterContract.View {
 
     private static final String ARG_CHAPTER_LIST = "chapterList";
 
     @BindView(R.id.rv_chapter_recycler)
     RecyclerView recyclerView;
-    //    RecyclerView recyclerView;
+    @BindView(R.id.pb_progress)
+    ProgressBar progressBar;
+
     View view;
 
     ChapterRecyclerAdapter adapter;
 
-    //    @Inject
+    @Inject
     ChapterService chapterService;
 
     private List<Chapter> chapterList;
 
-    private OnFragmentInteractionListener mListener;
-    private LinearLayout chapterLinear;
+//    private OnFragmentInteractionListener mListener;
 
     public FragmentChapter() {
         // Required empty public constructor
@@ -77,43 +71,44 @@ public class FragmentChapter extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        fillChapterList();
 //        if (getArguments() != null) {
-////            mParam1 = getArguments().getString(ARG_PARAM1);
-////            mParam2 = getArguments().getString(ARG_PARAM2);
-//            chapterList = (ArrayList<Chapter>) getArguments().getSerializable(ARG_CHAPTER_LIST);
+//            chapterList = getArguments().getParcelableArrayList(ARG_CHAPTER_LIST);
 //            getArguments().remove(ARG_CHAPTER_LIST);
 //        }
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-//        mListener.onFragmentInteraction("test fragment interaction!");
+
         view = inflater.inflate(R.layout.fragment_chapter, container, false);
         ButterKnife.bind(this, view);
-//        chapterLinear = view.findViewById(R.id.chapter_linear);
-        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-            chapterList = getArguments().getParcelableArrayList(ARG_CHAPTER_LIST);
-            getArguments().remove(ARG_CHAPTER_LIST);
-        }
-        mListener.onFragmentInteraction(chapterLinear);
-//        chapterLinear.removeAllViews();
-        if (chapterList != null) {
-//            createFields();
-            initViews();
-        }
-//        initViews();
+        AppAllComponent.getChapterComponent().injectsChapterService(this);
+//        fillChapterList();
+//        if (getArguments() != null) {
+//            chapterList = getArguments().getParcelableArrayList(ARG_CHAPTER_LIST);
+//            getArguments().remove(ARG_CHAPTER_LIST);
+//        }
+
+//        if (chapterList != null) {
+//            initViews();
+//        } else {
+//            chapterList = new ArrayList<>();
+//            initViews();
+//        }
         return view;
     }
 
+    private void fillChapterList() {
+        assert getArguments() != null;
+        if (getArguments().getParcelableArrayList(ARG_CHAPTER_LIST) != null) {
+            chapterList = getArguments().getParcelableArrayList(ARG_CHAPTER_LIST);
+            getArguments().remove(ARG_CHAPTER_LIST);
+        }
+    }
+
     public void initViews() {
-//        AppChapterComponent.getComponent().injectsChapterService(this);
-        chapterService = new ChapterService();
-//        recyclerView = view.findViewById(R.id.rv_chapter_recycler);
         adapter = new ChapterRecyclerAdapter(chapterList, getContext());
         adapter.setChapterService(chapterService);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -123,26 +118,26 @@ public class FragmentChapter extends Fragment {
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+//        if (mListener != null) {
+//            mListener.onFragmentInteraction(uri);
+//        }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+//        if (context instanceof OnFragmentInteractionListener) {
+//            mListener = (OnFragmentInteractionListener) context;
+//        } else {
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnFragmentInteractionListener");
+//        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+//        mListener = null;
     }
 
 
@@ -151,21 +146,10 @@ public class FragmentChapter extends Fragment {
         super.onResume();
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-
-        void onFragmentInteraction(LinearLayout chapterLinear);
-    }
+//    public interface OnFragmentInteractionListener {
+//        void onFragmentInteraction(Uri uri);
+//
+////        void onFragmentInteraction(LinearLayout chapterLinear);
+//    }
 
 }
