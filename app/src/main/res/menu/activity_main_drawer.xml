@@ -16,9 +16,10 @@
             android:id="@+id/nav_reward"
             android:icon="@drawable/ic_reward"
             android:title="@string/menu_reward" />
+
     </group>
 
-    <item android:title="Action">
+    <item android:title="@string/menu_title_action">
         <menu>
             <item
                 android:id="@+id/nav_action_restart"
@@ -31,13 +32,15 @@
         </menu>
     </item>
 
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_credits"
-                android:icon="@drawable/ic_info"
-                android:title="@string/menu_credits" />
-        </menu>
-    </item>
+    <group android:checkableBehavior="single">
+        <item android:title="@string/menu_title_information">
+            <menu>
+                <item
+                    android:id="@+id/nav_credits"
+                    android:icon="@drawable/ic_info"
+                    android:title="@string/menu_credits" />
+            </menu>
+        </item>
+    </group>
 
 </menu>

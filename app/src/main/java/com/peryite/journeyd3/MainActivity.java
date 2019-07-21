@@ -2,6 +2,7 @@ package com.peryite.journeyd3;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -12,94 +13,80 @@ import android.support.v4.widget.DrawerLayout;
 
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.widget.LinearLayout;
 
 import com.peryite.journeyd3.DBHelper.DBHelper;
+import com.peryite.journeyd3.contracts.MainContract;
 import com.peryite.journeyd3.fragments.FragmentChapter;
 import com.peryite.journeyd3.fragments.FragmentConquest;
 import com.peryite.journeyd3.fragments.FragmentCredits;
 import com.peryite.journeyd3.fragments.FragmentReward;
 import com.peryite.journeyd3.managers.FragmentManager;
 import com.peryite.journeyd3.models.Chapter;
-import com.peryite.journeyd3.utils.AppAllComponent;
+import com.peryite.journeyd3.presenters.MainPresenter;
 import com.peryite.journeyd3.utils.LogTag;
 
 import java.util.List;
 
-import javax.inject.Inject;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener
-//        FragmentConquest.OnFragmentInteractionListener,
-//        FragmentReward.OnFragmentInteractionListener,
-//        FragmentCredits.OnFragmentInteractionListener
-{
-//    @Inject
-    private FragmentChapter fragmentChapter;
-    private FragmentConquest fragmentConquest;
-    private FragmentReward fragmentReward;
-    private FragmentCredits fragmentCredits;
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, MainContract.View {
+
+    private final static int MAIN_CONTAINER_ID = R.id.container;
+
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout drawer;
+    @BindView(R.id.nav_view)
+    NavigationView navigationView;
+
+//    private FragmentChapter fragmentChapter;
+//    private FragmentConquest fragmentConquest;
+//    private FragmentReward fragmentReward;
+//    private FragmentCredits fragmentCredits;
     private DBHelper dbHelper;
+
+
+    private MainContract.Presenter presenter;
 
     private SharedPreferences sharedPreferences;
     private final static String TITLE = "title";
     private List<Chapter> chapterList;
 
-    private LinearLayout chapterLinear;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        ButterKnife.bind(this);
+        initViews();
+        Log.d(MainActivity.class.getSimpleName(), "onCreate: ");
+        presenter = new MainPresenter(this);
+        presenter.start();
+    }
+
+
+    private void initViews() {
+        Log.d(MainActivity.class.getSimpleName(), "initViews: started");
+
         setSupportActionBar(toolbar);
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
         navigationView.setNavigationItemSelectedListener(this);
 
-        FragmentManager.getInstance().initFragments();
+//        fragmentChapter = FragmentManager.getInstance().getFragmentChapter();
+//        fragmentConquest = FragmentManager.getInstance().getFragmentConquest();
+//        fragmentCredits = FragmentManager.getInstance().getFragmentCredits();
+//        fragmentReward = FragmentManager.getInstance().getFragmentReward();
 
-        fragmentChapter = FragmentManager.getInstance().getFragmentChapter();
-        fragmentConquest = FragmentManager.getInstance().getFragmentConquest();
-        fragmentCredits = FragmentManager.getInstance().getFragmentCredits();
-        fragmentReward = FragmentManager.getInstance().getFragmentReward();
-
-//        fragmentChapter = new FragmentChapter();
-//        fragmentConquest = new FragmentConquest();
-//        fragmentReward = new FragmentReward();
-//        fragmentCredits = new FragmentCredits();
-//
-//
-//
-//        dbHelper = new DBHelper(this);
-//
-//
-//
-//        if (dbHelper.checkRecords()) {
-//            Log.d(LogTag.INFORMATION, "database not empty");
-//            chapterList = dbHelper.getAllChapters();
-//            fragmentChapter = FragmentChapter.newInstance(chapterList);
-//        } else {
-//            Log.d(LogTag.INFORMATION, "database empty");
-////            updateJourney();
-//        }
-
-//        if (savedInstanceState == null) {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container,
-                        fragmentChapter).commit();
-        navigationView.setCheckedItem(R.id.nav_chapter);
-//        }
-
+        Log.d(MainActivity.class.getSimpleName(), "initViews: finished");
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -109,39 +96,29 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_chapter) {
-            Log.d(LogTag.CLICK, "Click: chapter button ");
-
-            if (chapterLinear != null) {
-                chapterLinear.removeAllViews();
-            }
-            fragmentChapter = fragmentChapter.newInstance(chapterList);
-            fragmentTransaction.replace(R.id.container, fragmentChapter);
-        } else if (id == R.id.nav_conquest) {
-            Log.d(LogTag.CLICK, "Click: conquest button ");
-            fragmentTransaction.replace(R.id.container, fragmentConquest);
-        } else if (id == R.id.nav_reward) {
-            Log.d(LogTag.CLICK, "Click: reward button ");
-//            fragmentReward = FragmentReward.newInstance("test newInstance");
-            fragmentTransaction.replace(R.id.container, fragmentReward);
-        } else if (id == R.id.nav_action_restart) {
-            Log.d(LogTag.CLICK, "Click: restart button ");
-        } else if (id == R.id.nav_action_update) {
-            Log.d(LogTag.CLICK, "Click: update button ");
-//            updateJourney();
-        } else if (id == R.id.nav_credits) {
-            Log.d(LogTag.CLICK, "Click: credits button ");
-            fragmentTransaction.replace(R.id.container, fragmentCredits);
+        switch (item.getItemId()) {
+            case R.id.nav_chapter:
+                presenter.onClickChapter(item.getItemId());
+                break;
+            case R.id.nav_conquest:
+                presenter.onClickConquest(item.getItemId());
+                break;
+            case R.id.nav_reward:
+                presenter.onClickReward(item.getItemId());
+                break;
+            case R.id.nav_action_restart:
+                presenter.onClickRestart();
+                break;
+            case R.id.nav_action_update:
+                presenter.onClickUpdate();
+                break;
+            case R.id.nav_credits:
+                presenter.onClickCredits(item.getItemId());
+                for (int i = 0; i < navigationView.getMenu().size(); i++) {
+                    navigationView.getMenu().getItem(i).setChecked(false);
+                }
+                break;
         }
-        fragmentTransaction.commit();
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -161,6 +138,24 @@ public class MainActivity extends AppCompatActivity
     private void restartJourney() {
 
     }
+
+    @Override
+    public void showMainFragment() {
+        Log.d(LogTag.INFORMATION, "Info: show main fragment.");
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(MAIN_CONTAINER_ID, FragmentManager.getInstance().getFirstFragment());
+        transaction.commit();
+        navigationView.setCheckedItem(R.id.nav_chapter);
+    }
+
+    @Override
+    public void selectFragment(Fragment fragment, int id_navigator) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(MAIN_CONTAINER_ID, fragment);
+        transaction.commit();
+        navigationView.setCheckedItem(id_navigator);
+    }
+
 
 //    private void updateJourney() {
 //        new Thread(() -> {

@@ -14,6 +14,9 @@
     <string name="menu_action_restart">Restart</string>
     <string name="menu_action_update">Update</string>
 
+    <string name="menu_title_information">Information</string>
+    <string name="menu_title_action">Action</string>
+
     <string name="start_journey">Start Journey</string>
 
     <!--string formatted-->

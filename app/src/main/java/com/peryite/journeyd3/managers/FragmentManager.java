@@ -34,8 +34,14 @@ public class FragmentManager {
     }
 
     private FragmentManager() {
+        AppAllComponent.getFragmentComponent().injectsFragments(this);
+        fragments = fillChapterList();
+
     }
 
+    public Fragment getFirstFragment(){
+        return fragments.get(0);
+    }
 
 
     public void initFragments() {
