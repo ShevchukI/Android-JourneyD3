@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/list_item_height"
-    android:background="@drawable/fragment_background">
+    android:layout_height="wrap_content"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,17 +23,18 @@
         <android.support.v7.widget.AppCompatCheckBox
             android:id="@+id/chbx_task_complete"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:button="@drawable/check_box" />
+            android:layout_height="wrap_content"
+            android:button="@drawable/check_box"
+            />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/tv_task_name"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:textColor="@color/colorAccent"
-            android:textSize="30sp"
+            android:textSize="20sp"
             tools:text="Some task" />
 
     </LinearLayout>
