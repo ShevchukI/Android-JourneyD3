@@ -3,7 +3,6 @@ package com.peryite.journeyd3.adapters;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatCheckBox;
-import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,11 +11,12 @@ import android.view.ViewGroup;
 
 import com.bignerdranch.expandablerecyclerview.ChildViewHolder;
 import com.bignerdranch.expandablerecyclerview.ExpandableRecyclerAdapter;
-import com.bignerdranch.expandablerecyclerview.ParentViewHolder;
 import com.peryite.journeyd3.R;
 import com.peryite.journeyd3.models.Chapter;
 import com.peryite.journeyd3.models.Task;
 import com.peryite.journeyd3.services.ChapterService;
+import com.peryite.journeyd3.viewHolders.child.TaskViewHolder;
+import com.peryite.journeyd3.viewHolders.parent.ChapterViewHolder;
 
 import java.util.List;
 
@@ -25,8 +25,8 @@ import butterknife.ButterKnife;
 
 
 public class ChapterRecyclerAdapter extends ExpandableRecyclerAdapter<Chapter, Task,
-        ChapterRecyclerAdapter.ChapterViewHolder, ChapterRecyclerAdapter.TaskViewHolder> {
-
+        ChapterViewHolder, TaskViewHolder> {
+    private final static String LOG_TAG = ChapterRecyclerAdapter.class.getSimpleName();
 
 
     ChapterService chapterService;
@@ -56,7 +56,7 @@ public class ChapterRecyclerAdapter extends ExpandableRecyclerAdapter<Chapter, T
                 Log.d(ChapterRecyclerAdapter.class.getSimpleName(), "bind: parent ");
             }
         });
-        return new ChapterViewHolder(view);
+        return new ChapterViewHolder(view, chapterService);
     }
 
     @NonNull
@@ -76,80 +76,24 @@ public class ChapterRecyclerAdapter extends ExpandableRecyclerAdapter<Chapter, T
     public void onBindParentViewHolder(@NonNull ChapterViewHolder parentViewHolder, int parentPosition, @NonNull Chapter parent) {
 //        parentViewHolder.bind(parentPosition);
         parentViewHolder.bind(parent);
+        parentViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                parentViewHolder.expandCollaps();
+            }
+        });
     }
 
     @Override
     public void onBindChildViewHolder(@NonNull TaskViewHolder childViewHolder, int parentPosition, int childPosition, @NonNull Task child) {
 //        childViewHolder.bind(parentPosition, childPosition);
         childViewHolder.bind(child);
-    }
-
-    public class ChapterViewHolder extends ParentViewHolder {
-        @BindView(R.id.tv_chapter_name)
-        AppCompatTextView chapterName;
-        @BindView(R.id.tv_chapter_count_done)
-        AppCompatTextView chapterCountDone;
-        @BindView(R.id.iv_arrow)
-        AppCompatImageView arrowIamge;
-
-        public ChapterViewHolder(@NonNull View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
-            arrowIamge.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (isExpanded()) {
-                        collapseView();
-                        arrowIamge.animate().rotation(0);
-                    } else {
-                        expandView();
-                        arrowIamge.animate().rotation(180);
-                    }
-                }
-            });
-        }
-
-        public boolean shouldItemViewClickToggleExpansion() {
-            return false;
-        }
-
-
-        public void bind(int parentPosition) {
-            chapterName.setText(chapters.get(parentPosition).getName());
-            chapterCountDone.setText(itemView.getResources().getString(R.string.chapter_complete_vs_all_task,
-                    chapterService.getCountChapterDoneTask(chapters.get(parentPosition)),
-                    chapterService.getCountChapterAllTask(chapters.get(parentPosition))));
-        }
-
-        public void bind(Chapter chapter) {
-            chapterName.setText(chapter.getName());
-            chapterCountDone.setText(itemView.getResources().getString(R.string.chapter_complete_vs_all_task,
-                    chapterService.getCountChapterDoneTask(chapter),
-                    chapterService.getCountChapterAllTask(chapter)));
-        }
-    }
-
-    public class TaskViewHolder extends ChildViewHolder {
-        @BindView(R.id.chbx_task_complete)
-        AppCompatCheckBox taskComplete;
-        @BindView(R.id.tv_task_name)
-        AppCompatTextView taskName;
-
-
-        public TaskViewHolder(@NonNull View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
-        }
-
-        public void bind(int parentPosition, int childPosition) {
-            taskComplete.setChecked(chapters.get(parentPosition).getTasks().get(childPosition).isDone());
-            taskName.setText(chapters.get(parentPosition).getTasks().get(childPosition).getName());
-        }
-
-        public void bind(Task task) {
-            taskComplete.setChecked(task.isDone());
-            taskName.setText(task.getName());
-        }
+        childViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(LOG_TAG, "onClick: " + child.getName() + ": " + child.isDone());
+            }
+        });
     }
 
     public void setChapterService(ChapterService chapterService) {

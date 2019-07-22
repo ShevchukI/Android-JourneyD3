@@ -12,7 +12,7 @@
     </style>
 
     <style name="TaskText">
-        <item name="android:textSize">35sp</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/colorAccent</item>
     </style>
 
