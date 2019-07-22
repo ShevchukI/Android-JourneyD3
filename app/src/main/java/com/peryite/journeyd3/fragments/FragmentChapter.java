@@ -26,6 +26,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 ///**
 // * A simple {@link Fragment} subclass.
@@ -43,6 +44,8 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
     RecyclerView recyclerView;
     @BindView(R.id.pb_progress)
     ProgressBar progressBar;
+
+    private Unbinder unbinder;
 
     View view;
 
@@ -83,7 +86,7 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
                              Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_chapter, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
         AppAllComponent.getChapterComponent().injectsChapterService(this);
 //        fillChapterList();
 //        if (getArguments() != null) {
@@ -152,4 +155,10 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
 ////        void onFragmentInteraction(LinearLayout chapterLinear);
 //    }
 
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
 }
