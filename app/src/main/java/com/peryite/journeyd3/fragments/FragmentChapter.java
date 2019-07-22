@@ -40,7 +40,6 @@ import butterknife.Unbinder;
 public class FragmentChapter extends Fragment implements ChapterContract.View {
 
     private final static String LOG_TAG = FragmentChapter.class.getSimpleName();
-    private final static String CHAPTER_LIST_TAG = "CHAPTER_LIST_TAG";
 
     @BindView(R.id.rv_chapter_recycler)
     RecyclerView recyclerView;
