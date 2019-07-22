@@ -2,22 +2,29 @@ package com.peryite.journeyd3.fragments;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.peryite.journeyd3.DBHelper.DBHelper;
 import com.peryite.journeyd3.R;
 import com.peryite.journeyd3.adapters.ChapterRecyclerAdapter;
 import com.peryite.journeyd3.contracts.ChapterContract;
 import com.peryite.journeyd3.models.Chapter;
 import com.peryite.journeyd3.services.ChapterService;
 import com.peryite.journeyd3.utils.AppAllComponent;
+import com.peryite.journeyd3.utils.LogTag;
+import com.peryite.journeyd3.utils.Parser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +81,10 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppAllComponent.getChapterComponent().injectsChapterService(this);
+        chapterList = new ArrayList<>();
+
+//        initVariable();
 //        fillChapterList();
 //        if (getArguments() != null) {
 //            chapterList = getArguments().getParcelableArrayList(ARG_CHAPTER_LIST);
@@ -87,7 +98,20 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
 
         view = inflater.inflate(R.layout.fragment_chapter, container, false);
         unbinder = ButterKnife.bind(this, view);
-        AppAllComponent.getChapterComponent().injectsChapterService(this);
+        if (chapterList.size() == 0) {
+            new ChapterLoaderTask().execute();
+        } else {
+            adapter = new ChapterRecyclerAdapter(chapterList, getContext());
+            adapter.setChapterService(chapterService);
+            recyclerView.setAdapter(adapter);
+        }
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+
+//        chapterList = fillChapterListFromDataBase();
+
+//        initVariable();
+//        initViews();
 //        fillChapterList();
 //        if (getArguments() != null) {
 //            chapterList = getArguments().getParcelableArrayList(ARG_CHAPTER_LIST);
@@ -103,19 +127,29 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
         return view;
     }
 
-    private void fillChapterList() {
-        assert getArguments() != null;
-        if (getArguments().getParcelableArrayList(ARG_CHAPTER_LIST) != null) {
-            chapterList = getArguments().getParcelableArrayList(ARG_CHAPTER_LIST);
-            getArguments().remove(ARG_CHAPTER_LIST);
-        }
+//    private void fillChapterList() {
+//        assert getArguments() != null;
+//        if (getArguments().getParcelableArrayList(ARG_CHAPTER_LIST) != null) {
+//            chapterList = getArguments().getParcelableArrayList(ARG_CHAPTER_LIST);
+//            getArguments().remove(ARG_CHAPTER_LIST);
+//        }
+//    }
+
+    private void initVariable() {
+        adapter = new ChapterRecyclerAdapter(chapterList, getContext());
+        adapter.setChapterService(chapterService);
     }
 
     public void initViews() {
-        adapter = new ChapterRecyclerAdapter(chapterList, getContext());
-        adapter.setChapterService(chapterService);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
+//        new ChapterLoaderTask().execute();
+        if (checkDataBaseRecords()) {
+            chapterList = fillChapterListFromDataBase();
+        } else {
+            updateDataBase();
+        }
 
     }
 
@@ -161,4 +195,77 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
         super.onDestroyView();
         unbinder.unbind();
     }
+
+    private void showProgressBar() {
+        if (progressBar != null) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void hideProgressBar() {
+        if (progressBar != null) {
+            progressBar.setVisibility(View.GONE);
+        }
+    }
+
+    private boolean checkDataBaseRecords() {
+        return DBHelper.getInstance(getContext()).checkRecords();
+    }
+
+    private List<Chapter> fillChapterListFromDataBase() {
+        return DBHelper.getInstance(getContext()).getAllChapters();
+    }
+
+    private List<Chapter> fillChapterListFromParser() {
+        return Parser.getInstance().getChaptersAndTasksArray();
+    }
+
+    public void updateDataBase() {
+        chapterList = fillChapterListFromParser();
+        DBHelper.getInstance(getContext()).deleteAllRecords();
+        DBHelper.getInstance(getContext()).fillDatabase(chapterList);
+    }
+
+    class ChapterLoaderTask extends AsyncTask<Void, Void, List<Chapter>> {
+        @Override
+        protected List<Chapter> doInBackground(Void... voids) {
+            if (checkDataBaseRecords()) {
+                chapterList = fillChapterListFromDataBase();
+            } else {
+                updateDataBase();
+            }
+            return chapterList;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            chapterList.clear();
+            showProgressBar();
+        }
+
+        @Override
+        protected void onPostExecute(List<Chapter> chapters) {
+            super.onPostExecute(chapters);
+//            adapter.notifyDataSetChanged();
+            adapter = new ChapterRecyclerAdapter(chapterList, getContext());
+            adapter.setChapterService(chapterService);
+            recyclerView.setAdapter(adapter);
+            hideProgressBar();
+        }
+    }
+
+//    @Override
+//    public void onSaveInstanceState(@NonNull Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        adapter.onSaveInstanceState(outState);
+//    }
+//
+//    @Override
+//    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+//        super.onViewStateRestored(savedInstanceState);
+//        if(savedInstanceState!=null) {
+//            adapter.onRestoreInstanceState(savedInstanceState);
+//        }
+//    }
 }

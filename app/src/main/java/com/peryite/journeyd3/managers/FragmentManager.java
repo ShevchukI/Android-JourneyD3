@@ -36,7 +36,6 @@ public class FragmentManager {
     private FragmentManager() {
         AppAllComponent.getFragmentComponent().injectsFragments(this);
         fragments = fillChapterList();
-
     }
 
     public Fragment getFirstFragment(){

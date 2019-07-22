@@ -41,18 +41,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @BindView(R.id.nav_view)
     NavigationView navigationView;
 
-//    private FragmentChapter fragmentChapter;
-//    private FragmentConquest fragmentConquest;
-//    private FragmentReward fragmentReward;
-//    private FragmentCredits fragmentCredits;
-    private DBHelper dbHelper;
-
-
     private MainContract.Presenter presenter;
 
     private SharedPreferences sharedPreferences;
     private final static String TITLE = "title";
-    private List<Chapter> chapterList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.d(MainActivity.class.getSimpleName(), "onCreate: ");
         presenter = new MainPresenter(this);
         presenter.start();
+
     }
 
 
@@ -76,11 +69,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
 
         navigationView.setNavigationItemSelectedListener(this);
-
-//        fragmentChapter = FragmentManager.getInstance().getFragmentChapter();
-//        fragmentConquest = FragmentManager.getInstance().getFragmentConquest();
-//        fragmentCredits = FragmentManager.getInstance().getFragmentCredits();
-//        fragmentReward = FragmentManager.getInstance().getFragmentReward();
 
         Log.d(MainActivity.class.getSimpleName(), "initViews: finished");
     }

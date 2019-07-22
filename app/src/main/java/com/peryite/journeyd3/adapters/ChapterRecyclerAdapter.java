@@ -3,6 +3,7 @@ package com.peryite.journeyd3.adapters;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatCheckBox;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,15 +30,20 @@ public class ChapterRecyclerAdapter extends ExpandableRecyclerAdapter<Chapter, T
 
 
     ChapterService chapterService;
-
+    List<Chapter> chapters;
     private Context context;
     private LayoutInflater inflater;
 
     public ChapterRecyclerAdapter(@NonNull List<Chapter> parentList, Context context) {
         super(parentList);
+        this.chapters = parentList;
         this.context = context;
         inflater = LayoutInflater.from(context);
 
+    }
+
+    public List<Chapter> getChapters() {
+        return chapters;
     }
 
     @NonNull
@@ -68,11 +74,13 @@ public class ChapterRecyclerAdapter extends ExpandableRecyclerAdapter<Chapter, T
 
     @Override
     public void onBindParentViewHolder(@NonNull ChapterViewHolder parentViewHolder, int parentPosition, @NonNull Chapter parent) {
+//        parentViewHolder.bind(parentPosition);
         parentViewHolder.bind(parent);
     }
 
     @Override
     public void onBindChildViewHolder(@NonNull TaskViewHolder childViewHolder, int parentPosition, int childPosition, @NonNull Task child) {
+//        childViewHolder.bind(parentPosition, childPosition);
         childViewHolder.bind(child);
     }
 
@@ -81,16 +89,36 @@ public class ChapterRecyclerAdapter extends ExpandableRecyclerAdapter<Chapter, T
         AppCompatTextView chapterName;
         @BindView(R.id.tv_chapter_count_done)
         AppCompatTextView chapterCountDone;
-//        @BindView(R.id.iv_arrow)
-//        AppCompatImageView imageArrow;
-
-//        View view;
-
+        @BindView(R.id.iv_arrow)
+        AppCompatImageView arrowIamge;
 
         public ChapterViewHolder(@NonNull View itemView) {
             super(itemView);
-//            view = itemView;
             ButterKnife.bind(this, itemView);
+            arrowIamge.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (isExpanded()) {
+                        collapseView();
+                        arrowIamge.animate().rotation(0);
+                    } else {
+                        expandView();
+                        arrowIamge.animate().rotation(180);
+                    }
+                }
+            });
+        }
+
+        public boolean shouldItemViewClickToggleExpansion() {
+            return false;
+        }
+
+
+        public void bind(int parentPosition) {
+            chapterName.setText(chapters.get(parentPosition).getName());
+            chapterCountDone.setText(itemView.getResources().getString(R.string.chapter_complete_vs_all_task,
+                    chapterService.getCountChapterDoneTask(chapters.get(parentPosition)),
+                    chapterService.getCountChapterAllTask(chapters.get(parentPosition))));
         }
 
         public void bind(Chapter chapter) {
@@ -113,6 +141,11 @@ public class ChapterRecyclerAdapter extends ExpandableRecyclerAdapter<Chapter, T
             ButterKnife.bind(this, itemView);
         }
 
+        public void bind(int parentPosition, int childPosition) {
+            taskComplete.setChecked(chapters.get(parentPosition).getTasks().get(childPosition).isDone());
+            taskName.setText(chapters.get(parentPosition).getTasks().get(childPosition).getName());
+        }
+
         public void bind(Task task) {
             taskComplete.setChecked(task.isDone());
             taskName.setText(task.getName());
@@ -122,4 +155,5 @@ public class ChapterRecyclerAdapter extends ExpandableRecyclerAdapter<Chapter, T
     public void setChapterService(ChapterService chapterService) {
         this.chapterService = chapterService;
     }
+
 }

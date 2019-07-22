@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.peryite.journeyd3.MainActivity;
 import com.peryite.journeyd3.models.Chapter;
 import com.peryite.journeyd3.models.Task;
 import com.peryite.journeyd3.utils.LogTag;
@@ -13,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DBHelper extends SQLiteOpenHelper {
+    private static DBHelper ourInstance = null;
+
 
     // database parameter
     private final static String DATABASE_NAME = "journeyDB";
@@ -24,12 +27,22 @@ public class DBHelper extends SQLiteOpenHelper {
     private TaskTable taskTable;
     private ConquestTable conquestTable;
 
-    public DBHelper(Context context) {
+    private Context context;
+
+    private DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.context = context;
         rewardTable = new RewardTable();
         chapterTable = new ChapterTable();
         taskTable = new TaskTable();
         conquestTable = new ConquestTable();
+    }
+
+    public static DBHelper getInstance(Context context) {
+        if (ourInstance == null) {
+            ourInstance = new DBHelper(context);
+        }
+        return ourInstance;
     }
 
     @Override
@@ -67,19 +80,15 @@ public class DBHelper extends SQLiteOpenHelper {
             return true;
         } else if (chapterTable.getCountRecords(db) != 0) {
             return true;
-        } else if (rewardTable.getCountRecords(db) != 0) {
-            return true;
-        } else {
-            return false;
-        }
+        } else return rewardTable.getCountRecords(db) != 0;
     }
 
     public void fillDatabase(List<Chapter> chapterList) {
         SQLiteDatabase database = this.getWritableDatabase();
-        for(Chapter chapter: chapterList){
+        for (Chapter chapter : chapterList) {
             chapter.getReward().setId(rewardTable.insertObject(database, chapter.getReward()));
             chapter.setId(chapterTable.insertObject(database, chapter));
-            for(Task task: chapter.getTasks()){
+            for (Task task : chapter.getTasks()) {
                 taskTable.insertObject(database, task, chapter.getId());
             }
         }

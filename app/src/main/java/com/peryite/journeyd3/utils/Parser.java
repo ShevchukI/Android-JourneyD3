@@ -15,10 +15,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Parser {
+    private static final Parser ourInstance = new Parser();
+
     private final static String URL = "https://d3resource.com/journey/";
     private Document document;
 
-    public Parser() {
+    public static Parser getInstance() {
+        return ourInstance;
+    }
+
+    private Parser() {
         try {
             document = Jsoup.connect(URL).get();
             Log.d(LogTag.RESULT, "document connected by URL");
