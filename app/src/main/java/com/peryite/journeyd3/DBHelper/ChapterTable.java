@@ -54,7 +54,7 @@ class ChapterTable implements TableRepository {
         return (int) DatabaseUtils.queryNumEntries(database, TABLE_NAME);
     }
 
-    public int insertObject(SQLiteDatabase database, Chapter chapter){
+    public int insertObject(SQLiteDatabase database, Chapter chapter) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(NAME, chapter.getName());
         contentValues.put(REWARD_ID, chapter.getReward().getId());

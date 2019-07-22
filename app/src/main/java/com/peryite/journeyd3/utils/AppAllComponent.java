@@ -4,7 +4,6 @@ import android.app.Application;
 
 import com.peryite.journeyd3.components.ChapterComponent;
 import com.peryite.journeyd3.components.DaggerChapterComponent;
-//import com.peryite.journeyd3.components.D
 import com.peryite.journeyd3.components.DaggerFragmentComponent;
 import com.peryite.journeyd3.components.FragmentComponent;
 

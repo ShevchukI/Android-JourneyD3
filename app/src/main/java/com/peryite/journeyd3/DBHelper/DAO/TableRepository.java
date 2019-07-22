@@ -4,7 +4,10 @@ import android.database.sqlite.SQLiteDatabase;
 
 public interface TableRepository {
     void create(SQLiteDatabase database);
+
     void delete(SQLiteDatabase database);
+
     void drop(SQLiteDatabase database);
+
     int getCountRecords(SQLiteDatabase database);
 }

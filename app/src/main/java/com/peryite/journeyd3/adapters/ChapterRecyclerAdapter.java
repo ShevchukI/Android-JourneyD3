@@ -2,14 +2,11 @@ package com.peryite.journeyd3.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.AppCompatCheckBox;
-import android.support.v7.widget.AppCompatTextView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bignerdranch.expandablerecyclerview.ChildViewHolder;
 import com.bignerdranch.expandablerecyclerview.ExpandableRecyclerAdapter;
 import com.peryite.journeyd3.R;
 import com.peryite.journeyd3.listeners.OnChapterRecyclerAdapterListener;
@@ -20,9 +17,6 @@ import com.peryite.journeyd3.viewHolders.child.TaskViewHolder;
 import com.peryite.journeyd3.viewHolders.parent.ChapterViewHolder;
 
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 
 public class ChapterRecyclerAdapter extends ExpandableRecyclerAdapter<Chapter, Task,
@@ -42,7 +36,7 @@ public class ChapterRecyclerAdapter extends ExpandableRecyclerAdapter<Chapter, T
         listener = new OnChapterRecyclerAdapterListener() {
             @Override
             public void notifyParentByPosition(int parentPosition) {
-                notifyParentChanged(parentPosition);
+                notifyItemChanged(parentPosition);
             }
         };
         inflater = LayoutInflater.from(context);
@@ -59,6 +53,7 @@ public class ChapterRecyclerAdapter extends ExpandableRecyclerAdapter<Chapter, T
                 Log.d(ChapterRecyclerAdapter.class.getSimpleName(), "bind: parent ");
             }
         });
+
         return new ChapterViewHolder(view, chapterService);
     }
 
@@ -78,12 +73,16 @@ public class ChapterRecyclerAdapter extends ExpandableRecyclerAdapter<Chapter, T
     @Override
     public void onBindParentViewHolder(@NonNull ChapterViewHolder parentViewHolder, int parentPosition, @NonNull Chapter parent) {
         parentViewHolder.bind(parent);
-        parentViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                parentViewHolder.expandCollaps();
-            }
+        parentViewHolder.itemView.setOnClickListener(v -> {
+            Log.d(LOG_TAG, "onClick: parent");
+            parentViewHolder.expandCollapse();
+//            if(parentViewHolder.isCollapse()){
+//                parentViewHolder.rotateArrowDown();
+//            } else {
+//                parentViewHolder.rotateArrowDown();
+//            }
         });
+
     }
 
     @Override
@@ -94,7 +93,6 @@ public class ChapterRecyclerAdapter extends ExpandableRecyclerAdapter<Chapter, T
     public void setChapterService(ChapterService chapterService) {
         this.chapterService = chapterService;
     }
-
 
 
 }

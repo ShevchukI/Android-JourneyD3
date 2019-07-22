@@ -1,6 +1,7 @@
 package com.peryite.journeyd3.DBHelper;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
@@ -18,6 +19,7 @@ class TaskTable implements TableRepository {
 
     public final static String ID = "_id";
     public final static String NAME = "name";
+
     // 0 - not done
     // 1 - done
     public final static String DONE = "done";
@@ -105,7 +107,6 @@ class TaskTable implements TableRepository {
         } else {
             Log.d(LogTag.CHAPTER_TASK_TABLE, "0 rows");
         }
-//        LogTag.logCursor(cursor);
         cursor.close();
         return chapterTasks;
     }

@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
@@ -11,12 +11,12 @@
         <item name="android:textColor">@color/colorAccent</item>
     </style>
 
-    <style name="TaskText">
+    <style name="TaskText" tools:keep="@style/TaskText">
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/colorAccent</item>
     </style>
 
-    <style name="CheckBox" parent="Widget.AppCompat.CompoundButton.CheckBox">
+    <style name="CheckBox" parent="Widget.AppCompat.CompoundButton.CheckBox" tools:keep="@style/CheckBox">
         <item name="android:background">@drawable/button</item>
         <!--<item name="android:button">@drawable/check_box</item>-->
         <item name="android:colorControlNormal">@color/colorBorder</item>

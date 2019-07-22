@@ -5,7 +5,6 @@ import android.os.Parcelable;
 
 import com.bignerdranch.expandablerecyclerview.model.Parent;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Data;

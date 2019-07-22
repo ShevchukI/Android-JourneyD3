@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!--<color name="colorPrimary">#008577</color>-->
     <!--<color name="colorPrimaryDark">#00574B</color>-->
     <!--<color name="colorAccent">#D81B60</color>-->
     <color name="colorPrimary">#2E0000</color>
     <color name="colorPrimaryDark">#1C0000</color>
     <color name="colorAccent">#FFC000</color>
-    <color name="colorBorder">#744620</color>
-    <color name="colorGreen">#193919</color>
+    <color name="colorBorder" tools:keep="@color/colorBorder">#744620</color>
+    <color name="colorGreen" tools:keep="@color/colorGreen">#193919</color>
 </resources>

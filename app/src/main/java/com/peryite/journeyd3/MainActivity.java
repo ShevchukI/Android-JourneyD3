@@ -2,30 +2,21 @@ package com.peryite.journeyd3;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.util.Log;
-import android.view.MenuItem;
-import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
-
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.MenuItem;
 
-import com.peryite.journeyd3.DBHelper.DBHelper;
 import com.peryite.journeyd3.contracts.MainContract;
-import com.peryite.journeyd3.fragments.FragmentChapter;
-import com.peryite.journeyd3.fragments.FragmentConquest;
-import com.peryite.journeyd3.fragments.FragmentCredits;
-import com.peryite.journeyd3.fragments.FragmentReward;
 import com.peryite.journeyd3.managers.FragmentManager;
-import com.peryite.journeyd3.models.Chapter;
 import com.peryite.journeyd3.presenters.MainPresenter;
 import com.peryite.journeyd3.utils.LogTag;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,6 +24,7 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, MainContract.View {
 
     private final static int MAIN_CONTAINER_ID = R.id.container;
+    private final static String SAVED_FRAGMENT = "saved_fragment";
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -42,6 +34,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     NavigationView navigationView;
 
     private MainContract.Presenter presenter;
+
+    private Fragment currentFragment;
 
     private SharedPreferences sharedPreferences;
     private final static String TITLE = "title";
@@ -126,10 +120,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void showMainFragment() {
         Log.d(LogTag.INFORMATION, "Info: show main fragment.");
+        currentFragment = FragmentManager.getInstance().getFirstFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(MAIN_CONTAINER_ID, FragmentManager.getInstance().getFirstFragment());
+        transaction.replace(MAIN_CONTAINER_ID, currentFragment);
         transaction.commit();
         navigationView.setCheckedItem(R.id.nav_chapter);
+
     }
 
     @Override
@@ -138,10 +134,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         transaction.replace(MAIN_CONTAINER_ID, fragment);
         transaction.commit();
         navigationView.setCheckedItem(id_navigator);
+        currentFragment = fragment;
     }
 
 
-//    private void updateJourney() {
+    //    private void updateJourney() {
 //        new Thread(() -> {
 //            Parser parser = new Parser();
 //            chapterList = parser.getChaptersAndTasksArray();

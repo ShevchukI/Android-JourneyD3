@@ -5,8 +5,6 @@ import com.peryite.journeyd3.fragments.FragmentConquest;
 import com.peryite.journeyd3.fragments.FragmentCredits;
 import com.peryite.journeyd3.fragments.FragmentReward;
 
-import javax.inject.Named;
-
 import dagger.Module;
 import dagger.Provides;
 

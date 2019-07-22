@@ -3,7 +3,6 @@ package com.peryite.journeyd3.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
