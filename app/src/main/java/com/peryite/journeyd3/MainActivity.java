@@ -118,10 +118,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        saveJourney();
     }
 
-//    @Override
-//    public void onFragmentInteraction(Uri uri) {
-//        Log.d(LogTag.RESULT, "onFragmentInteraction");
-//    }
 
     private void restartJourney() {
 

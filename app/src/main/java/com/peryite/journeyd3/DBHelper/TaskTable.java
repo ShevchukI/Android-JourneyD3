@@ -47,6 +47,7 @@ class TaskTable implements TableRepository {
         return database.update(TABLE_NAME, contentValues, selection, selectionArgs);
     }
 
+
     @Override
     public void create(SQLiteDatabase database) {
         database.execSQL(CREATE_TABLE);

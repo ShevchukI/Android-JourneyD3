@@ -27,12 +27,6 @@ public class ChapterViewHolder extends ParentViewHolder {
             super(itemView);
             ButterKnife.bind(this, itemView);
             this.chapterService = chapterService;
-//            arrowImage.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    expandCollaps();
-//                }
-//            });
         }
 
         public boolean shouldItemViewClickToggleExpansion() {
@@ -50,19 +44,12 @@ public class ChapterViewHolder extends ParentViewHolder {
             }
         }
 
-        public void rotateArrow(float value){
-            arrowImage.animate().rotation(value);
-        }
-
-//        public void bind(int parentPosition) {
-//            chapterName.setText(chapters.get(parentPosition).getName());
-//            chapterCountDone.setText(itemView.getResources().getString(R.string.chapter_complete_vs_all_task,
-//                    chapterService.getCountChapterDoneTask(chapters.get(parentPosition)),
-//                    chapterService.getCountChapterAllTask(chapters.get(parentPosition))));
-//        }
-
         public void bind(Chapter chapter) {
             chapterName.setText(chapter.getName());
+            notifyCompletedTask(chapter);
+        }
+
+        private void notifyCompletedTask(Chapter chapter){
             chapterCountDone.setText(itemView.getResources().getString(R.string.chapter_complete_vs_all_task,
                     chapterService.getCountChapterDoneTask(chapter),
                     chapterService.getCountChapterAllTask(chapter)));

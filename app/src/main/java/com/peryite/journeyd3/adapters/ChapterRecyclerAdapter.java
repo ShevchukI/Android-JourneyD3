@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.bignerdranch.expandablerecyclerview.ChildViewHolder;
 import com.bignerdranch.expandablerecyclerview.ExpandableRecyclerAdapter;
 import com.peryite.journeyd3.R;
+import com.peryite.journeyd3.listeners.OnChapterRecyclerAdapterListener;
 import com.peryite.journeyd3.models.Chapter;
 import com.peryite.journeyd3.models.Task;
 import com.peryite.journeyd3.services.ChapterService;
@@ -28,22 +29,24 @@ public class ChapterRecyclerAdapter extends ExpandableRecyclerAdapter<Chapter, T
         ChapterViewHolder, TaskViewHolder> {
     private final static String LOG_TAG = ChapterRecyclerAdapter.class.getSimpleName();
 
-
+    OnChapterRecyclerAdapterListener listener;
     ChapterService chapterService;
     List<Chapter> chapters;
-    private Context context;
+    Context context;
     private LayoutInflater inflater;
 
     public ChapterRecyclerAdapter(@NonNull List<Chapter> parentList, Context context) {
         super(parentList);
         this.chapters = parentList;
         this.context = context;
+        listener = new OnChapterRecyclerAdapterListener() {
+            @Override
+            public void notifyParentByPosition(int parentPosition) {
+                notifyParentChanged(parentPosition);
+            }
+        };
         inflater = LayoutInflater.from(context);
 
-    }
-
-    public List<Chapter> getChapters() {
-        return chapters;
     }
 
     @NonNull
@@ -69,12 +72,11 @@ public class ChapterRecyclerAdapter extends ExpandableRecyclerAdapter<Chapter, T
                 Log.d(ChapterRecyclerAdapter.class.getSimpleName(), "bind: child ");
             }
         });
-        return new TaskViewHolder(view);
+        return new TaskViewHolder(view, listener, context);
     }
 
     @Override
     public void onBindParentViewHolder(@NonNull ChapterViewHolder parentViewHolder, int parentPosition, @NonNull Chapter parent) {
-//        parentViewHolder.bind(parentPosition);
         parentViewHolder.bind(parent);
         parentViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,18 +88,13 @@ public class ChapterRecyclerAdapter extends ExpandableRecyclerAdapter<Chapter, T
 
     @Override
     public void onBindChildViewHolder(@NonNull TaskViewHolder childViewHolder, int parentPosition, int childPosition, @NonNull Task child) {
-//        childViewHolder.bind(parentPosition, childPosition);
-        childViewHolder.bind(child);
-        childViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(LOG_TAG, "onClick: " + child.getName() + ": " + child.isDone());
-            }
-        });
+        childViewHolder.bind(chapters, parentPosition, childPosition);
     }
 
     public void setChapterService(ChapterService chapterService) {
         this.chapterService = chapterService;
     }
+
+
 
 }

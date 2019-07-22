@@ -75,12 +75,18 @@ public class DBHelper extends SQLiteOpenHelper {
     public boolean checkRecords() {
         SQLiteDatabase db = this.getReadableDatabase();
         if (conquestTable.getCountRecords(db) != 0) {
+            db.close();
             return true;
         } else if (taskTable.getCountRecords(db) != 0) {
+            db.close();
             return true;
         } else if (chapterTable.getCountRecords(db) != 0) {
+            db.close();
             return true;
-        } else return rewardTable.getCountRecords(db) != 0;
+        } else {
+            db.close();
+            return rewardTable.getCountRecords(db) != 0;
+        }
     }
 
     public void fillDatabase(List<Chapter> chapterList) {
@@ -92,6 +98,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 taskTable.insertObject(database, task, chapter.getId());
             }
         }
+        database.close();
     }
 
     public ArrayList<Chapter> getAllChapters() {
@@ -112,7 +119,16 @@ public class DBHelper extends SQLiteOpenHelper {
                 updateRowCount += taskTable.updateTask(database, chapterTask);
             }
         }
+        database.close();
         Log.d(LogTag.RESULT, "updates row count " + updateRowCount);
         return updateRowCount;
     }
+
+    public int updateTask(Task task) {
+        SQLiteDatabase database = this.getWritableDatabase();
+        int updateRowCount = taskTable.updateTask(database, task);
+        database.close();
+        return updateRowCount;
+    }
+
 }
