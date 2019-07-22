@@ -1,6 +1,5 @@
 package com.peryite.journeyd3;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -13,8 +12,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.peryite.journeyd3.contracts.ChapterContract;
 import com.peryite.journeyd3.contracts.MainContract;
 import com.peryite.journeyd3.managers.FragmentManager;
+import com.peryite.journeyd3.presenters.ChapterFragmentPresenter;
 import com.peryite.journeyd3.presenters.MainPresenter;
 import com.peryite.journeyd3.utils.LogTag;
 
@@ -24,7 +25,6 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, MainContract.View {
 
     private final static int MAIN_CONTAINER_ID = R.id.container;
-    private final static String SAVED_FRAGMENT = "saved_fragment";
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -33,12 +33,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @BindView(R.id.nav_view)
     NavigationView navigationView;
 
-    private MainContract.Presenter presenter;
-
+    private MainContract.Presenter mainPresenter;
+    private ChapterContract.Presenter chapterPresenter;
     private Fragment currentFragment;
-
-    private SharedPreferences sharedPreferences;
-    private final static String TITLE = "title";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +44,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ButterKnife.bind(this);
         initViews();
         Log.d(MainActivity.class.getSimpleName(), "onCreate: ");
-        presenter = new MainPresenter(this);
-        presenter.start();
+        mainPresenter = new MainPresenter(this);
+        chapterPresenter = new ChapterFragmentPresenter(FragmentManager.getInstance().getFragmentChapter());
+        mainPresenter.start();
 
     }
-
 
     private void initViews() {
         Log.d(MainActivity.class.getSimpleName(), "initViews: started");
@@ -80,22 +77,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_chapter:
-                presenter.onClickChapter(item.getItemId());
+                mainPresenter.onClickChapter(item.getItemId());
                 break;
             case R.id.nav_conquest:
-                presenter.onClickConquest(item.getItemId());
+                mainPresenter.onClickConquest(item.getItemId());
                 break;
             case R.id.nav_reward:
-                presenter.onClickReward(item.getItemId());
+                mainPresenter.onClickReward(item.getItemId());
                 break;
             case R.id.nav_action_restart:
-                presenter.onClickRestart();
+                mainPresenter.onClickRestart();
                 break;
             case R.id.nav_action_update:
-                presenter.onClickUpdate();
+                mainPresenter.onClickUpdate();
                 break;
             case R.id.nav_credits:
-                presenter.onClickCredits(item.getItemId());
+                mainPresenter.onClickCredits(item.getItemId());
                 for (int i = 0; i < navigationView.getMenu().size(); i++) {
                     navigationView.getMenu().getItem(i).setChecked(false);
                 }
@@ -109,12 +106,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onDestroy() {
         super.onDestroy();
         Log.d(LogTag.RESULT, "saveJourney ");
-//        saveJourney();
-    }
-
-
-    private void restartJourney() {
-
     }
 
     @Override
@@ -137,43 +128,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         currentFragment = fragment;
     }
 
-
-    //    private void updateJourney() {
-//        new Thread(() -> {
-//            Parser parser = new Parser();
-//            chapterList = parser.getChaptersAndTasksArray();
-//            dbHelper.deleteAllRecords();
-//            dbHelper.fillDatabase(chapterList);
-//            fragmentChapter = FragmentChapter.newInstance(chapterList);
-//            Log.d(LogTag.RESULT, "updateJourney: updated!");
-//            for (Chapter chapter:chapterList){
-//                Log.d(LogTag.RESULT, "updateJourney: " + chapter.getName());
-//            }
-//        }).start();
-//
-//    }
-
-//    private void parsingData() {
-//        Parser parser = new Parser();
-//        saveTitle(parser.getTitle());
-//
-//    }
-
-//    private void saveTitle(String title) {
-//        sharedPreferences = getPreferences(MODE_PRIVATE);
-//        SharedPreferences.Editor editor = sharedPreferences.edit();
-//        editor.putString(TITLE, title);
-//        editor.apply();
-//    }
-//
-//    private String loadTitle() {
-//        sharedPreferences = getPreferences(MODE_PRIVATE);
-//        return sharedPreferences.getString(TITLE, "");
-//    }
-
-//    private void saveJourney() {
-//        dbHelper.updateChapter(chapterList);
-//        Log.d(LogTag.RESULT, "DataBase updated!");
-//    }
+    @Override
+    public void resetChapter() {
+        chapterPresenter.resetChapter();
+    }
 
 }

@@ -15,10 +15,10 @@ import java.util.ArrayList;
 
 class ChapterTable implements TableRepository {
 
-    public final static String TABLE_NAME = "chapter";
+    public static String TABLE_NAME = "chapter";
 
-    public final static String ID = "_id";
     public final static String NAME = "name";
+    public final static String ID = "_id";
     public final static String REWARD_ID = "rewardId";
 
     private final static String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME

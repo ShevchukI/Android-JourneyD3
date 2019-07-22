@@ -76,11 +76,6 @@ public class ChapterRecyclerAdapter extends ExpandableRecyclerAdapter<Chapter, T
         parentViewHolder.itemView.setOnClickListener(v -> {
             Log.d(LOG_TAG, "onClick: parent");
             parentViewHolder.expandCollapse();
-//            if(parentViewHolder.isCollapse()){
-//                parentViewHolder.rotateArrowDown();
-//            } else {
-//                parentViewHolder.rotateArrowDown();
-//            }
         });
 
     }

@@ -36,8 +36,9 @@ class TaskTable implements TableRepository {
 
     private final static String DELETE_TABLE = "DELETE FROM " + TABLE_NAME;
     private final static String DROP_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
+    private final static String RESET_TASK_TABLE = "UPDATE " + TABLE_NAME + " SET " + DONE + " = 0";
 
-    public int updateTask(SQLiteDatabase database, Task chapterTask) {
+   public int updateTask(SQLiteDatabase database, Task chapterTask) {
         ContentValues contentValues = new ContentValues();
         String selection = ID + " = ?";
         String[] selectionArgs = {String.valueOf(chapterTask.getId())};
@@ -50,30 +51,10 @@ class TaskTable implements TableRepository {
     }
 
 
-    @Override
-    public void create(SQLiteDatabase database) {
-        database.execSQL(CREATE_TABLE);
-    }
-
-    @Override
-    public void delete(SQLiteDatabase database) {
-        database.execSQL(DELETE_TABLE);
-    }
-
-    @Override
-    public void drop(SQLiteDatabase database) {
-        database.execSQL(DROP_TABLE);
-    }
-
-    @Override
-    public int getCountRecords(SQLiteDatabase database) {
-        return (int) DatabaseUtils.queryNumEntries(database, TABLE_NAME);
-    }
-
-    public int insertObject(SQLiteDatabase database, Task task, int chapterId){
+    public int insertObject(SQLiteDatabase database, Task task, int chapterId) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(NAME, task.getName());
-        if(task.isDone()){
+        if (task.isDone()) {
             contentValues.put(DONE, 1);
         } else {
             contentValues.put(DONE, 0);
@@ -109,5 +90,29 @@ class TaskTable implements TableRepository {
         }
         cursor.close();
         return chapterTasks;
+    }
+
+    public void resetAllTasks(SQLiteDatabase database){
+       database.execSQL(RESET_TASK_TABLE);
+    }
+
+    @Override
+    public void create(SQLiteDatabase database) {
+        database.execSQL(CREATE_TABLE);
+    }
+
+    @Override
+    public void delete(SQLiteDatabase database) {
+        database.execSQL(DELETE_TABLE);
+    }
+
+    @Override
+    public void drop(SQLiteDatabase database) {
+        database.execSQL(DROP_TABLE);
+    }
+
+    @Override
+    public int getCountRecords(SQLiteDatabase database) {
+        return (int) DatabaseUtils.queryNumEntries(database, TABLE_NAME);
     }
 }

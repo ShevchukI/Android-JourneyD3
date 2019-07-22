@@ -5,11 +5,13 @@ import android.os.Parcelable;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Data
-@ToString
-@EqualsAndHashCode
+//@ToString
+//@EqualsAndHashCode
+@NoArgsConstructor
 public class Reward implements Parcelable {
     private int id;
     private String name;

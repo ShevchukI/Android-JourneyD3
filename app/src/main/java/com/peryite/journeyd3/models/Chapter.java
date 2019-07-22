@@ -15,10 +15,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 @Data
-@ToString
-@EqualsAndHashCode
+//@ToString
+//@EqualsAndHashCode
 @NoArgsConstructor
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class Chapter implements Parent<Task>, Parcelable {
     private int id;
     @NonNull
@@ -26,10 +26,9 @@ public class Chapter implements Parent<Task>, Parcelable {
     private List<Task> tasks;
     private Reward reward;
 
-    public Chapter(String name, List<Task> tasks){
-        this.tasks = tasks;
+    public Chapter(String name){
+        this.name = name;
     }
-
 
     @Override
     public List<Task> getChildList() {

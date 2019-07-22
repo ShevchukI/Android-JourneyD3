@@ -6,10 +6,14 @@ public interface ChapterContract {
     }
 
     interface Presenter {
+        void initViews();
 
+        void resetChapter();
     }
 
     interface View {
+        void initViews();
 
+        void reset();
     }
 }

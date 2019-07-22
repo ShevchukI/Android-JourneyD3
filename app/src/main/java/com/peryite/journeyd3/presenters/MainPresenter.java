@@ -2,6 +2,7 @@ package com.peryite.journeyd3.presenters;
 
 import android.util.Log;
 
+import com.peryite.journeyd3.DBHelper.DBHelper;
 import com.peryite.journeyd3.contracts.MainContract;
 import com.peryite.journeyd3.managers.FragmentManager;
 import com.peryite.journeyd3.utils.LogTag;
@@ -46,7 +47,7 @@ public class MainPresenter implements MainContract.Presenter {
     @Override
     public void onClickRestart() {
         Log.d(LogTag.CLICK, "Click: restart button ");
-        //TODO add async method to unchecked task
+        view.resetChapter();
     }
 
     @Override

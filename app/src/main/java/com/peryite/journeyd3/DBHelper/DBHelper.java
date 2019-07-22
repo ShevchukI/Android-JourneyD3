@@ -130,4 +130,10 @@ public class DBHelper extends SQLiteOpenHelper {
         return updateRowCount;
     }
 
+    public void resetAllTasks(){
+        SQLiteDatabase database = this.getWritableDatabase();
+        taskTable.resetAllTasks(database);
+        database.close();
+    }
+
 }

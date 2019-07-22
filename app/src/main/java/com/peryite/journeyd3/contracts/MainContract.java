@@ -24,5 +24,7 @@ public interface MainContract {
         void showMainFragment();
 
         void selectFragment(Fragment fragment, int id_fragment_navigator);
+
+        void resetChapter();
     }
 }

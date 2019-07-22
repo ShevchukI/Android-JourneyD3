@@ -40,15 +40,6 @@ public class FragmentManager {
         return fragments.get(0);
     }
 
-
-    public void initFragments() {
-           AppAllComponent.getFragmentComponent().injectsFragments(this);
-//            FragmentComponent component = DaggerFragmentComponent.create();
-//            component.injectsFragments(activity);
-            fragments = fillChapterList();
-
-    }
-
     private List<Fragment> fillChapterList() {
         List<Fragment> fragmentList = new ArrayList<>();
         fragmentList.add(fragmentChapter);

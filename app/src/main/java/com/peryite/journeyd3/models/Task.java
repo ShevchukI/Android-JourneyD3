@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Data
-@ToString
-@EqualsAndHashCode
+//@ToString
+//@EqualsAndHashCode
 @NoArgsConstructor
 public class Task implements Parcelable {
     private int id;
