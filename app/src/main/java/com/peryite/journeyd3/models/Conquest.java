@@ -1,9 +1,7 @@
 package com.peryite.journeyd3.models;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Data
 //@ToString

@@ -8,11 +8,8 @@ import com.bignerdranch.expandablerecyclerview.model.Parent;
 import java.util.List;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 
 @Data
 //@ToString
