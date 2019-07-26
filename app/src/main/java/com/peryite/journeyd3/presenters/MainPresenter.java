@@ -53,6 +53,6 @@ public class MainPresenter implements MainContract.Presenter {
     @Override
     public void onClickUpdate() {
         Log.d(LogTag.CLICK, "Click: update button ");
-        //TODO add async method to clear database and fill again
+        view.updateChapter();
     }
 }

@@ -11,12 +11,12 @@ public class ChapterFragmentPresenter implements ChapterContract.Presenter {
     }
 
     @Override
-    public void initViews() {
-        view.initViews();
+    public void resetChapter() {
+        view.reset();
     }
 
     @Override
-    public void resetChapter() {
-        view.reset();
+    public void updateChapter() {
+        view.update();
     }
 }

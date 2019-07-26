@@ -26,7 +26,7 @@ public class Chapter implements Parent<Task>, Parcelable {
     private List<Task> tasks;
     private Reward reward;
 
-    public Chapter(String name){
+    public Chapter(String name) {
         this.name = name;
     }
 

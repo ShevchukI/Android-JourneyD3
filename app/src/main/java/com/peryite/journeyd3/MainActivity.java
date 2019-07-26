@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mainPresenter = new MainPresenter(this);
         chapterPresenter = new ChapterFragmentPresenter(FragmentManager.getInstance().getFragmentChapter());
         mainPresenter.start();
-
     }
 
     private void initViews() {
@@ -102,11 +101,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d(LogTag.RESULT, "saveJourney ");
-    }
+
 
     @Override
     public void showMainFragment() {
@@ -133,4 +128,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         chapterPresenter.resetChapter();
     }
 
+    public void updateChapter(){
+        chapterPresenter.updateChapter();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(LogTag.RESULT, "saveJourney ");
+    }
 }
