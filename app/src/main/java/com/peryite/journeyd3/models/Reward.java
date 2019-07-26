@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Data
-//@ToString
-//@EqualsAndHashCode
 @NoArgsConstructor
 public class Reward implements Parcelable {
     private int id;

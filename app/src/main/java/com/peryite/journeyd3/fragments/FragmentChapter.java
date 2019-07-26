@@ -3,11 +3,9 @@ package com.peryite.journeyd3.fragments;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,6 +23,7 @@ import com.peryite.journeyd3.models.Chapter;
 import com.peryite.journeyd3.presenters.ChapterFragmentPresenter;
 import com.peryite.journeyd3.services.ChapterService;
 import com.peryite.journeyd3.utils.AppAllComponent;
+import com.peryite.journeyd3.utils.Constant;
 import com.peryite.journeyd3.utils.Parser;
 
 import java.util.ArrayList;
@@ -35,6 +34,8 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class FragmentChapter extends Fragment implements ChapterContract.View {
 
@@ -70,7 +71,6 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
         if (savedInstanceState == null) {
             initVariable();
         }
-
     }
 
     @Override
@@ -183,6 +183,7 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
         protected void onPostExecute(List<Chapter> chapters) {
             super.onPostExecute(chapters);
             recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(linearLayoutManager);
             hideProgressBar();
             recyclerView.setVisibility(View.VISIBLE);
         }
@@ -191,11 +192,11 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
     class ChapterUpdateTask extends AsyncTask<Void, Void, List<Chapter>> {
 
         @Override
-        protected  List<Chapter> doInBackground(Void... voids) {
+        protected List<Chapter> doInBackground(Void... voids) {
             updateDataBase();
             adapter = new ChapterRecyclerAdapter(chapterList, getContext());
             adapter.setChapterService(chapterService);
-            return null;
+            return chapterList;
         }
 
         @Override
@@ -206,9 +207,10 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
         }
 
         @Override
-        protected void onPostExecute( List<Chapter> chapters) {
+        protected void onPostExecute(List<Chapter> chapters) {
             super.onPostExecute(chapters);
             recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(linearLayoutManager);
             hideProgressBar();
             recyclerView.setVisibility(View.VISIBLE);
         }
@@ -220,11 +222,19 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
         chapterList = new ArrayList<>();
     }
 
+    private void saveTitle() {
+        SharedPreferences sharedPreferences = this.getActivity().getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(Constant.SHARED_TITLE, Parser.getInstance().getTitle());
+        editor.apply();
+    }
+
     private void updateDataBase() {
         List<Chapter> chapters = fillChapterListFromParser();
         DBHelper.getInstance(getContext()).deleteAllRecords();
         DBHelper.getInstance(getContext()).fillDatabase(chapters);
         chapterList = fillChapterListFromDataBase();
+        saveTitle();
     }
 
     private void resetTasks() {

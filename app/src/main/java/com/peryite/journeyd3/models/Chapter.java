@@ -15,10 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 @Data
-//@ToString
-//@EqualsAndHashCode
 @NoArgsConstructor
-//@RequiredArgsConstructor
 public class Chapter implements Parent<Task>, Parcelable {
     private int id;
     @NonNull
