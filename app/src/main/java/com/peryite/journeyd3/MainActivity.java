@@ -120,8 +120,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_action_update:
                 mainPresenter.onClickUpdate();
-                saveTitleFromParser();
-                showTitle();
+                new TitleLoader().execute();
                 break;
             case R.id.nav_credits:
                 mainPresenter.onClickCredits(item.getItemId());
