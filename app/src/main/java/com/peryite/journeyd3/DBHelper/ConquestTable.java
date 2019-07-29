@@ -12,8 +12,8 @@ class ConquestTable implements TableRepository {
     public final static String ID = "_id";
     public final static String NAME = "name";
     public final static String DESCRIPTION = "description";
-    // 0 - not done
-    // 1 - done
+    // 0 - not complete
+    // 1 - complete
     public final static String DONE = "done";
 
     private final static String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME

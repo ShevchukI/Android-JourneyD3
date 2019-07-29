@@ -15,13 +15,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.peryite.journeyd3.DBHelper.DBHelper;
 import com.peryite.journeyd3.DBHelper.JourneyDB;
 import com.peryite.journeyd3.R;
 import com.peryite.journeyd3.adapters.ChapterRecyclerAdapter;
 import com.peryite.journeyd3.contracts.ChapterContract;
 import com.peryite.journeyd3.entities.ChapterEntity;
+import com.peryite.journeyd3.entities.RewardEntity;
 import com.peryite.journeyd3.models.Chapter;
+import com.peryite.journeyd3.models.Reward;
 import com.peryite.journeyd3.presenters.ChapterFragmentPresenter;
 import com.peryite.journeyd3.services.ChapterService;
 import com.peryite.journeyd3.utils.AppAllComponent;
@@ -63,6 +64,8 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
     private ChapterRecyclerAdapter adapter;
     private List<Chapter> chapterList;
 
+    private JourneyDB journeyDB;
+
     public FragmentChapter() {
         // Required empty public constructor
     }
@@ -81,6 +84,7 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
         view = inflater.inflate(R.layout.fragment_chapter, container, false);
         unbinder = ButterKnife.bind(this, view);
         linearLayoutManager = new LinearLayoutManager(getContext());
+        journeyDB = JourneyDB.getInstance(getContext());
         if (chapterList.isEmpty()) {
             new ChapterLoaderTask().execute();
         } else {
@@ -89,6 +93,7 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(linearLayoutManager);
         }
+        //TODO
         new ChapterDAOTest().execute();
         return view;
     }
@@ -168,7 +173,8 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
 
         @Override
         protected List<Chapter> doInBackground(Void... voids) {
-            DBHelper.getInstance(getContext()).resetAllTasks();
+            //TODO
+//            DBHelper.getInstance(getContext()).resetAllTasks();
             chapterList = fillChapterListFromDataBase();
             adapter = new ChapterRecyclerAdapter(chapterList, getContext());
             adapter.setChapterService(chapterService);
@@ -219,18 +225,28 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
         }
     }
 
-    class ChapterDAOTest extends AsyncTask<Void, Void, Void>{
+    class ChapterDAOTest extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... voids) {
-//            ChapterEntity chapterEntity = new ChapterEntity();
-//            chapterEntity.setId(1);
-//            chapterEntity.setName("Chapter I");
-//            chapterEntity.setRewardId();
-            List<Chapter> testChapterList = JourneyDB.getInstance(getContext()).chapterDAO().getAll();
-            for(Chapter chapter : testChapterList){
+            ChapterEntity chapterEntity = new ChapterEntity();
+            chapterEntity.setId(1);
+            chapterEntity.setName("Chapter I");
+            chapterEntity.setRewardId(1);
+            journeyDB.chapterDAO().insert(chapterEntity);
+            RewardEntity rewardEntity = new RewardEntity();
+            rewardEntity.setName("Test Reward");
+            rewardEntity.setComplete(false);
+            journeyDB.rewardDAO().insert(rewardEntity);
+            List<Chapter> testChapterList = journeyDB.chapterDAO().getAll();
+            for (Chapter chapter : testChapterList) {
                 Log.d(LOG_TAG, "doInBackground: Test DAO Chapter: " + chapter.getId() + " " + chapter.getName());
             }
+            long testId = 1L;
+            Chapter chapter = journeyDB.chapterDAO().getById(testId);
+            Reward reward = journeyDB.rewardDAO().getById(testId);
+            Log.d(LOG_TAG, "doInBackground: Test DAT Chapter By Id " + testId + ": " + chapter.getId() + " " + chapter.getName());
+            Log.d(LOG_TAG, "doInBackground: Test DAT Reward By Id " + testId + ": " + reward.getId() + " " + reward.getName() + " " + reward.isComplete());
             return null;
         }
     }
@@ -249,19 +265,22 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
     }
 
     private void updateDataBase() {
-        List<Chapter> chapters = fillChapterListFromParser();
-        DBHelper.getInstance(getContext()).deleteAllRecords();
-        DBHelper.getInstance(getContext()).fillDatabase(chapters);
-        chapterList = fillChapterListFromDataBase();
+        //TODO
+//        List<Chapter> chapters = fillChapterListFromParser();
+//        DBHelper.getInstance(getContext()).deleteAllRecords();
+//        DBHelper.getInstance(getContext()).fillDatabase(chapters);
+//        chapterList = fillChapterListFromDataBase();
         saveTitle();
     }
 
     private void resetTasks() {
-        new ChapterRestartTask().execute();
+        //TODO
+//        new ChapterRestartTask().execute();
     }
 
     private void updateTasks() {
-        new ChapterUpdateTask().execute();
+        //TODO
+//        new ChapterUpdateTask().execute();
     }
 
     private void showProgressBar() {
@@ -277,15 +296,24 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
     }
 
     private boolean checkDataBaseRecords() {
-        return DBHelper.getInstance(getContext()).checkRecords();
+        //TODO
+//        boolean check = DBHelper.getInstance(getContext()).checkRecords();
+        boolean check = false;
+        return check;
     }
 
     private List<Chapter> fillChapterListFromDataBase() {
-        return DBHelper.getInstance(getContext()).getAllChapters();
+        //TODO
+//        List<Chapter> chapters = DBHelper.getInstance(getContext()).getAllChapters();
+        List<Chapter> chapters = new ArrayList<>();
+        return chapters;
     }
 
     private List<Chapter> fillChapterListFromParser() {
-        return Parser.getInstance().getChaptersAndTasksArray();
+        //TODO
+//        List<Chapter> chapters = Parser.getInstance().getChaptersAndTasksArray();
+        List<Chapter> chapters = new ArrayList<>();
+        return chapters;
     }
 
     @Override

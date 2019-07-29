@@ -20,8 +20,8 @@ class TaskTable implements TableRepository {
     public final static String ID = "_id";
     public final static String NAME = "name";
 
-    // 0 - not done
-    // 1 - done
+    // 0 - not complete
+    // 1 - complete
     public final static String DONE = "done";
     public final static String CHAPTER_ID = "chapterId";
 

@@ -4,17 +4,15 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
-import lombok.Data;
-
-@Entity(tableName = "chapter")
-public class ChapterEntity {
+@Entity(tableName = "reward")
+public class RewardEntity {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "_id")
     private long id;
     @ColumnInfo(name = "name")
     private String name;
-    @ColumnInfo(name = "rewardId")
-    private long rewardId;
+    @ColumnInfo(name = "complete")
+    private boolean complete;
 
     public long getId() {
         return id;
@@ -32,11 +30,11 @@ public class ChapterEntity {
         this.name = name;
     }
 
-    public long getRewardId() {
-        return rewardId;
+    public boolean isComplete() {
+        return complete;
     }
 
-    public void setRewardId(long rewardId) {
-        this.rewardId = rewardId;
+    public void setComplete(boolean complete) {
+        this.complete = complete;
     }
 }

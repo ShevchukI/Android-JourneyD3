@@ -13,8 +13,8 @@ class RewardTable implements TableRepository {
 
     public final static String ID = "_id";
     public final static String NAME = "name";
-    // 0 - not done
-    // 1 - done
+    // 0 - not complete
+    // 1 - complete
     public final static String DONE = "done";
 
     private final static String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
@@ -50,7 +50,7 @@ class RewardTable implements TableRepository {
     public long insertObject(SQLiteDatabase database, Reward reward){
         ContentValues contentValues = new ContentValues();
         contentValues.put(NAME, reward.getName());
-        if(reward.isDone()){
+        if(reward.isComplete()){
             contentValues.put(DONE, 1);
         } else {
             contentValues.put(DONE, 0);

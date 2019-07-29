@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.View;
 
 import com.bignerdranch.expandablerecyclerview.ChildViewHolder;
-import com.peryite.journeyd3.DBHelper.DBHelper;
 import com.peryite.journeyd3.R;
 import com.peryite.journeyd3.listeners.OnChapterRecyclerAdapterListener;
 import com.peryite.journeyd3.models.Chapter;
@@ -41,7 +40,8 @@ public class TaskViewHolder extends ChildViewHolder {
             @Override
             public void onClick(View v) {
                 chapters.get(chapterPosition).getTasks().get(taskPosition).setDone(taskComplete.isChecked());
-                DBHelper.getInstance(context).updateTask(chapters.get(chapterPosition).getTasks().get(taskPosition));
+                //TODO
+//                DBHelper.getInstance(context).updateTask(chapters.get(chapterPosition).getTasks().get(taskPosition));
                 listener.notifyParentByPosition(chapterPosition);
                 Log.d(LOG_TAG, "onClick: " + chapters.get(chapterPosition).getName());
                 Log.d(LOG_TAG, "onClick: " + chapters.get(chapterPosition).getTasks().get(taskPosition).getName() + ": " + chapters.get(chapterPosition).getTasks().get(taskPosition).isDone());
