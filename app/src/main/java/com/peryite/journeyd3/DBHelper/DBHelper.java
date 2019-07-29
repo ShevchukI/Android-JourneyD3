@@ -60,6 +60,15 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    @Override
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        conquestTable.drop(db);
+        taskTable.drop(db);
+        chapterTable.drop(db);
+        rewardTable.drop(db);
+        onCreate(db);
+    }
+
     public void deleteAllRecords() {
         SQLiteDatabase db = this.getWritableDatabase();
         conquestTable.delete(db);
