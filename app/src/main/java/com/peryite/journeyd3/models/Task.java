@@ -11,7 +11,7 @@ import lombok.ToString;
 @Data
 @NoArgsConstructor
 public class Task implements Parcelable {
-    private int id;
+    private long id;
     private String name;
     private boolean done;
 
@@ -28,13 +28,13 @@ public class Task implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.id);
+        dest.writeLong(this.id);
         dest.writeString(this.name);
         dest.writeByte(this.done ? (byte) 1 : (byte) 0);
     }
 
     protected Task(Parcel in) {
-        this.id = in.readInt();
+        this.id = in.readLong();
         this.name = in.readString();
         this.done = in.readByte() != 0;
     }

@@ -11,17 +11,17 @@ import lombok.Data;
 public class ChapterEntity {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "_id")
-    private int id;
+    private long id;
     @ColumnInfo(name = "name")
     private String name;
     @ColumnInfo(name = "rewardId")
-    private int rewardId;
+    private long rewardId;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -33,11 +33,11 @@ public class ChapterEntity {
         this.name = name;
     }
 
-    public int getRewardId() {
+    public long getRewardId() {
         return rewardId;
     }
 
-    public void setRewardId(int rewardId) {
+    public void setRewardId(long rewardId) {
         this.rewardId = rewardId;
     }
 }

@@ -18,7 +18,7 @@ class ConquestTable implements TableRepository {
 
     private final static String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
             + "("
-            + ID + " INTEGER PRIMARY KEY,"
+            + ID + " LONG PRIMARY KEY,"
             + NAME + " TEXT,"
             + DESCRIPTION + " TEXT,"
             + DONE + " INTEGER DEFAULT 0"
@@ -43,7 +43,7 @@ class ConquestTable implements TableRepository {
     }
 
     @Override
-    public int getCountRecords(SQLiteDatabase database) {
-        return (int) DatabaseUtils.queryNumEntries(database, TABLE_NAME);
+    public long getCountRecords(SQLiteDatabase database) {
+        return DatabaseUtils.queryNumEntries(database, TABLE_NAME);
     }
 }

@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.peryite.journeyd3.models.Chapter;
 import com.peryite.journeyd3.models.Task;
+import com.peryite.journeyd3.utils.Constant;
 import com.peryite.journeyd3.utils.LogTag;
 
 import java.util.ArrayList;
@@ -15,9 +16,9 @@ import java.util.List;
 public class DBHelper extends SQLiteOpenHelper {
     private static DBHelper ourInstance = null;
 
-    // database parameter
-    private final static String DATABASE_NAME = "journeyDB";
-    private final static int DATABASE_VERSION = 2;
+//    // database parameter
+//    private final static String DATABASE_NAME = "journeyDB";
+//    private final static int DATABASE_VERSION = 4;
 
     // tables in database
     private RewardTable rewardTable;
@@ -28,7 +29,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private Context context;
 
     private DBHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        super(context, Constant.DATABASE_NAME, null, Constant.DATABASE_VERSION);
         this.context = context;
         rewardTable = new RewardTable();
         chapterTable = new ChapterTable();

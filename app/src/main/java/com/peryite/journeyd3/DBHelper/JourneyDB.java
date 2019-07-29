@@ -7,15 +7,16 @@ import android.content.Context;
 
 import com.peryite.journeyd3.DBHelper.DAO.ChapterDAO;
 import com.peryite.journeyd3.entities.ChapterEntity;
+import com.peryite.journeyd3.utils.Constant;
 
-@Database(entities = ChapterEntity.class, exportSchema = false, version = 2)
+@Database(entities = ChapterEntity.class, exportSchema = false, version = Constant.DATABASE_VERSION)
 public abstract class JourneyDB extends RoomDatabase {
-    private final static String DATABASE_NAME = "journeyDB";
+//    private final static String DATABASE_NAME = "journeyDB";
     private static JourneyDB instance;
 
     public static synchronized JourneyDB getInstance(Context context){
         if(instance == null){
-            instance = Room.databaseBuilder(context.getApplicationContext(), JourneyDB.class, DATABASE_NAME)
+            instance = Room.databaseBuilder(context.getApplicationContext(), JourneyDB.class, Constant.DATABASE_NAME)
                     .fallbackToDestructiveMigration()
                     .build();
         }

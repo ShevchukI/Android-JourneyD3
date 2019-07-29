@@ -11,7 +11,7 @@ import lombok.ToString;
 @Data
 @NoArgsConstructor
 public class Reward implements Parcelable {
-    private int id;
+    private long id;
     private String name;
     private boolean done;
 
@@ -20,7 +20,7 @@ public class Reward implements Parcelable {
         this.done = done;
     }
 
-    public Reward(int id) {
+    public Reward(long id) {
         this.id = id;
     }
 
@@ -32,13 +32,13 @@ public class Reward implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.id);
+        dest.writeLong(this.id);
         dest.writeString(this.name);
         dest.writeByte(this.done ? (byte) 1 : (byte) 0);
     }
 
     protected Reward(Parcel in) {
-        this.id = in.readInt();
+        this.id = in.readLong();
         this.name = in.readString();
         this.done = in.readByte() != 0;
     }

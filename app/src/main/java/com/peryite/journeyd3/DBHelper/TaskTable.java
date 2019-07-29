@@ -27,10 +27,10 @@ class TaskTable implements TableRepository {
 
     private final static String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
             + "("
-            + ID + " INTEGER PRIMARY KEY,"
+            + ID + " LONG PRIMARY KEY,"
             + NAME + " TEXT,"
             + DONE + " INTEGER DEFAULT 0,"
-            + CHAPTER_ID + " INTEGER,"
+            + CHAPTER_ID + " LONG,"
             + "FOREIGN KEY(" + CHAPTER_ID + ") REFERENCES " + ChapterTable.TABLE_NAME + "(" + ChapterTable.ID + ")"
             + ")";
 
@@ -51,7 +51,7 @@ class TaskTable implements TableRepository {
     }
 
 
-    public int insertObject(SQLiteDatabase database, Task task, int chapterId) {
+    public long insertObject(SQLiteDatabase database, Task task, long chapterId) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(NAME, task.getName());
         if (task.isDone()) {
@@ -60,11 +60,11 @@ class TaskTable implements TableRepository {
             contentValues.put(DONE, 0);
         }
         contentValues.put(CHAPTER_ID, chapterId);
-        int id = (int) database.insert(TABLE_NAME, null, contentValues);
+        long id = database.insert(TABLE_NAME, null, contentValues);
         return id;
     }
 
-    public ArrayList<Task> selectTaskByChapterId(SQLiteDatabase database, int id) {
+    public ArrayList<Task> selectTaskByChapterId(SQLiteDatabase database, long id) {
         ArrayList<Task> chapterTasks = new ArrayList<>();
         String[] columns = {ID, NAME, DONE};
         String selection = CHAPTER_ID + " = ?";
@@ -76,7 +76,7 @@ class TaskTable implements TableRepository {
             int doneIndex = cursor.getColumnIndex(DONE);
             do {
                 Task chapterTask = new Task();
-                chapterTask.setId(cursor.getInt(idIndex));
+                chapterTask.setId(cursor.getLong(idIndex));
                 chapterTask.setName(cursor.getString(nameIndex));
                 if (cursor.getInt(doneIndex) == 1) {
                     chapterTask.setDone(true);
@@ -112,7 +112,7 @@ class TaskTable implements TableRepository {
     }
 
     @Override
-    public int getCountRecords(SQLiteDatabase database) {
-        return (int) DatabaseUtils.queryNumEntries(database, TABLE_NAME);
+    public long getCountRecords(SQLiteDatabase database) {
+        return DatabaseUtils.queryNumEntries(database, TABLE_NAME);
     }
 }

@@ -9,5 +9,5 @@ public interface TableRepository {
 
     void drop(SQLiteDatabase database);
 
-    int getCountRecords(SQLiteDatabase database);
+    long getCountRecords(SQLiteDatabase database);
 }

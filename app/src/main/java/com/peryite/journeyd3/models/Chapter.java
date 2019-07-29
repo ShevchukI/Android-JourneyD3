@@ -17,7 +17,7 @@ import lombok.NonNull;
 @NoArgsConstructor
 public class Chapter implements Parent<Task>, Parcelable {
     @ColumnInfo(name = "_id")
-    private int id;
+    private long id;
     @NonNull
     @ColumnInfo(name = "name")
     private String name;
@@ -54,7 +54,7 @@ public class Chapter implements Parent<Task>, Parcelable {
     }
 
     protected Chapter(Parcel in) {
-        this.id = in.readInt();
+        this.id = in.readLong();
         this.name = in.readString();
         this.tasks = in.createTypedArrayList(Task.CREATOR);
         this.reward = in.readParcelable(Reward.class.getClassLoader());
@@ -72,11 +72,11 @@ public class Chapter implements Parent<Task>, Parcelable {
         }
     };
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

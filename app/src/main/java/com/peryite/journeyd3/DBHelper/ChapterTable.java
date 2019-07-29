@@ -23,9 +23,9 @@ class ChapterTable implements TableRepository {
 
     private final static String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
             + "("
-            + ID + " INTEGER PRIMARY KEY,"
+            + ID + " LONG PRIMARY KEY,"
             + NAME + " TEXT,"
-            + REWARD_ID + " INTEGER,"
+            + REWARD_ID + " LONG,"
             + "FOREIGN KEY(" + REWARD_ID + ") REFERENCES " + RewardTable.TABLE_NAME + "(" + RewardTable.ID + ")"
             + ")";
 
@@ -50,15 +50,15 @@ class ChapterTable implements TableRepository {
     }
 
     @Override
-    public int getCountRecords(SQLiteDatabase database) {
-        return (int) DatabaseUtils.queryNumEntries(database, TABLE_NAME);
+    public long getCountRecords(SQLiteDatabase database) {
+        return DatabaseUtils.queryNumEntries(database, TABLE_NAME);
     }
 
-    public int insertObject(SQLiteDatabase database, Chapter chapter) {
+    public long insertObject(SQLiteDatabase database, Chapter chapter) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(NAME, chapter.getName());
         contentValues.put(REWARD_ID, chapter.getReward().getId());
-        int id = (int) database.insert(TABLE_NAME, null, contentValues);
+        long id = database.insert(TABLE_NAME, null, contentValues);
         return id;
     }
 

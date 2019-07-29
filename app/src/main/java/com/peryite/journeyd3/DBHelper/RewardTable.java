@@ -19,7 +19,7 @@ class RewardTable implements TableRepository {
 
     private final static String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
             + "("
-            + ID + " INTEGER PRIMARY KEY,"
+            + ID + " LONG PRIMARY KEY,"
             + NAME + " TEXT,"
             + DONE + " INTEGER DEFAULT 0"
             + ")";
@@ -43,11 +43,11 @@ class RewardTable implements TableRepository {
     }
 
     @Override
-    public int getCountRecords(SQLiteDatabase database) {
-        return (int) DatabaseUtils.queryNumEntries(database, TABLE_NAME);
+    public long getCountRecords(SQLiteDatabase database) {
+        return DatabaseUtils.queryNumEntries(database, TABLE_NAME);
     }
 
-    public int insertObject(SQLiteDatabase database, Reward reward){
+    public long insertObject(SQLiteDatabase database, Reward reward){
         ContentValues contentValues = new ContentValues();
         contentValues.put(NAME, reward.getName());
         if(reward.isDone()){
@@ -55,7 +55,7 @@ class RewardTable implements TableRepository {
         } else {
             contentValues.put(DONE, 0);
         }
-        int id = (int) database.insert(TABLE_NAME, null, contentValues);
+        long id = database.insert(TABLE_NAME, null, contentValues);
         return id;
     }
 
