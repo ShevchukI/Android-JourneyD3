@@ -17,7 +17,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     // database parameter
     private final static String DATABASE_NAME = "journeyDB";
-    private final static int DATABASE_VERSION = 1;
+    private final static int DATABASE_VERSION = 2;
 
     // tables in database
     private RewardTable rewardTable;

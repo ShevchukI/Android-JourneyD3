@@ -16,9 +16,11 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.peryite.journeyd3.DBHelper.DBHelper;
+import com.peryite.journeyd3.DBHelper.JourneyDB;
 import com.peryite.journeyd3.R;
 import com.peryite.journeyd3.adapters.ChapterRecyclerAdapter;
 import com.peryite.journeyd3.contracts.ChapterContract;
+import com.peryite.journeyd3.entities.ChapterEntity;
 import com.peryite.journeyd3.models.Chapter;
 import com.peryite.journeyd3.presenters.ChapterFragmentPresenter;
 import com.peryite.journeyd3.services.ChapterService;
@@ -87,6 +89,7 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(linearLayoutManager);
         }
+        new ChapterDAOTest().execute();
         return view;
     }
 
@@ -213,6 +216,22 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
             recyclerView.setLayoutManager(linearLayoutManager);
             hideProgressBar();
             recyclerView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    class ChapterDAOTest extends AsyncTask<Void, Void, Void>{
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+//            ChapterEntity chapterEntity = new ChapterEntity();
+//            chapterEntity.setId(1);
+//            chapterEntity.setName("Chapter I");
+//            chapterEntity.setRewardId();
+            List<Chapter> testChapterList = JourneyDB.getInstance(getContext()).chapterDAO().getAll();
+            for(Chapter chapter : testChapterList){
+                Log.d(LOG_TAG, "doInBackground: Test DAO Chapter: " + chapter.getId() + " " + chapter.getName());
+            }
+            return null;
         }
     }
 
