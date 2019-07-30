@@ -14,7 +14,6 @@ import com.peryite.journeyd3.utils.Constant;
 @Database(entities = {ChapterEntity.class, TaskEntity.class},
         exportSchema = false, version = Constant.DATABASE_VERSION)
 public abstract class JourneyDB extends RoomDatabase {
-    //    private final static String DATABASE_NAME = "journeyDB";
     private static JourneyDB instance;
 
     public static synchronized JourneyDB getInstance(Context context) {

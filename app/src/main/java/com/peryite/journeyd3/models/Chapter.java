@@ -16,14 +16,10 @@ import lombok.NonNull;
 @Data
 @NoArgsConstructor
 public class Chapter implements Parent<Task>, Parcelable {
-    @ColumnInfo(name = "_id")
     private long id;
     @NonNull
-    @ColumnInfo(name = "name")
     private String name;
-    @Ignore
     private List<Task> tasks;
-    @Ignore
     private Reward reward;
 
     public Chapter(String name) {
@@ -71,20 +67,4 @@ public class Chapter implements Parent<Task>, Parcelable {
             return new Chapter[size];
         }
     };
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }
