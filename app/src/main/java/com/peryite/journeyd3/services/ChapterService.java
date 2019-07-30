@@ -10,7 +10,7 @@ public class ChapterService implements ChapterApi {
     public int getCountChapterDoneTask(Chapter chapter) {
         int count = 0;
         for(Task task : chapter.getTasks()){
-            if(task.isDone()){
+            if(task.isComplete()){
                 count++;
             }
         }

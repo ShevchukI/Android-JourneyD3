@@ -1,5 +1,8 @@
 package com.peryite.journeyd3;
 
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -8,6 +11,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -15,9 +19,15 @@ import android.view.MenuItem;
 import com.peryite.journeyd3.contracts.ChapterContract;
 import com.peryite.journeyd3.contracts.MainContract;
 import com.peryite.journeyd3.managers.FragmentManager;
+import com.peryite.journeyd3.models.Chapter;
+import com.peryite.journeyd3.models.Reward;
 import com.peryite.journeyd3.presenters.ChapterFragmentPresenter;
 import com.peryite.journeyd3.presenters.MainPresenter;
+import com.peryite.journeyd3.utils.Constant;
 import com.peryite.journeyd3.utils.LogTag;
+import com.peryite.journeyd3.utils.Parser;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,10 +42,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     DrawerLayout drawer;
     @BindView(R.id.nav_view)
     NavigationView navigationView;
+    @BindView(R.id.tv_season_title)
+    AppCompatTextView title;
 
     private MainContract.Presenter mainPresenter;
     private ChapterContract.Presenter chapterPresenter;
     private Fragment currentFragment;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mainPresenter = new MainPresenter(this);
         chapterPresenter = new ChapterFragmentPresenter(FragmentManager.getInstance().getFragmentChapter());
         mainPresenter.start();
-
+        new TitleLoader().execute();
     }
 
     private void initViews() {
@@ -60,16 +73,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
 
         navigationView.setNavigationItemSelectedListener(this);
-
         Log.d(MainActivity.class.getSimpleName(), "initViews: finished");
     }
 
-    @Override
-    public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+    class TitleLoader extends AsyncTask<Void, Void, String> {
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            String title = "";
+            if (titleShareIsEmpty()) {
+                saveTitleFromParser();
+                title = getTitleFromShare();
+            } else {
+                title = getTitleFromShare();
+            }
+            return title;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+        }
+
+        @Override
+        protected void onPostExecute(String titleName) {
+            super.onPostExecute(titleName);
+            title.setText(titleName);
         }
     }
 
@@ -90,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_action_update:
                 mainPresenter.onClickUpdate();
+                new TitleLoader().execute();
                 break;
             case R.id.nav_credits:
                 mainPresenter.onClickCredits(item.getItemId());
@@ -102,11 +133,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d(LogTag.RESULT, "saveJourney ");
-    }
 
     @Override
     public void showMainFragment() {
@@ -133,4 +159,52 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         chapterPresenter.resetChapter();
     }
 
+    @Override
+    public void updateChapter() {
+        chapterPresenter.updateChapter();
+    }
+
+    private void showTitle() {
+        if (titleShareIsEmpty()) {
+            saveTitleFromParser();
+        }
+        title.setText(getTitleFromShare());
+    }
+
+    private String getTitleFromShare() {
+        sharedPreferences = getPreferences(MODE_PRIVATE);
+        String savedTitle = sharedPreferences.getString(Constant.SHARED_TITLE, "");
+        return savedTitle;
+    }
+
+    private boolean titleShareIsEmpty() {
+        if (getTitleFromShare().equals("")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void saveTitleFromParser() {
+        sharedPreferences = getPreferences(MODE_PRIVATE);
+        Editor ed = sharedPreferences.edit();
+        String title = Parser.getInstance().getTitle();
+        ed.putString(Constant.SHARED_TITLE, title);
+        ed.apply();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(LogTag.RESULT, "saveJourney ");
+    }
 }
