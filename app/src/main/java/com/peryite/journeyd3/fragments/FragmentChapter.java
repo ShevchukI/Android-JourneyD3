@@ -177,6 +177,7 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
         protected List<Chapter> doInBackground(Void... voids) {
             //TODO
 //            DBHelper.getInstance(getContext()).resetAllTasks();
+            dataBaseConverter.getTaskDAO().reset();
             chapterList = fillChapterListFromDataBase();
             adapter = new ChapterRecyclerAdapter(chapterList, getContext());
             adapter.setChapterService(chapterService);
@@ -323,12 +324,12 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
 
     private void resetTasks() {
         //TODO
-//        new ChapterRestartTask().execute();
+        new ChapterRestartTask().execute();
     }
 
     private void updateTasks() {
         //TODO
-//        new ChapterUpdateTask().execute();
+        new ChapterUpdateTask().execute();
     }
 
     private void showProgressBar() {

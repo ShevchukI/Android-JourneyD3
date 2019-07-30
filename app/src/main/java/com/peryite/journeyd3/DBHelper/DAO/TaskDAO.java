@@ -18,6 +18,9 @@ public interface TaskDAO {
     @Query("SELECT * FROM TASK WHERE chapter_id = :chapterId")
     List<TaskEntity> getAllEntityByChapterId(long chapterId);
 
+    @Query("UPDATE TASK SET complete = 0")
+    void reset();
+
     @Insert
     long insert(TaskEntity taskEntity);
 
