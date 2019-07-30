@@ -19,15 +19,11 @@ import android.view.MenuItem;
 import com.peryite.journeyd3.contracts.ChapterContract;
 import com.peryite.journeyd3.contracts.MainContract;
 import com.peryite.journeyd3.managers.FragmentManager;
-import com.peryite.journeyd3.models.Chapter;
-import com.peryite.journeyd3.models.Reward;
 import com.peryite.journeyd3.presenters.ChapterFragmentPresenter;
 import com.peryite.journeyd3.presenters.MainPresenter;
 import com.peryite.journeyd3.utils.Constant;
 import com.peryite.journeyd3.utils.LogTag;
 import com.peryite.journeyd3.utils.Parser;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
