@@ -4,20 +4,18 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Data
 @NoArgsConstructor
 public class Task implements Parcelable {
     private long id;
     private String name;
-    private boolean done;
+    private boolean complete;
 
-    public Task(String name, boolean done) {
+    public Task(String name, boolean complete) {
         this.name = name;
-        this.done = done;
+        this.complete = complete;
     }
 
 
@@ -30,13 +28,13 @@ public class Task implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(this.id);
         dest.writeString(this.name);
-        dest.writeByte(this.done ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.complete ? (byte) 1 : (byte) 0);
     }
 
     protected Task(Parcel in) {
         this.id = in.readLong();
         this.name = in.readString();
-        this.done = in.readByte() != 0;
+        this.complete = in.readByte() != 0;
     }
 
     public static final Creator<Task> CREATOR = new Creator<Task>() {

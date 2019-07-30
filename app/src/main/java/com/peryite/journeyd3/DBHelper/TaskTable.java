@@ -1,7 +1,6 @@
 package com.peryite.journeyd3.DBHelper;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
@@ -42,7 +41,7 @@ class TaskTable implements TableRepository {
         ContentValues contentValues = new ContentValues();
         String selection = ID + " = ?";
         String[] selectionArgs = {String.valueOf(chapterTask.getId())};
-        if (chapterTask.isDone()) {
+        if (chapterTask.isComplete()) {
             contentValues.put(DONE, 1);
         } else {
             contentValues.put(DONE, 0);
@@ -54,7 +53,7 @@ class TaskTable implements TableRepository {
     public long insertObject(SQLiteDatabase database, Task task, long chapterId) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(NAME, task.getName());
-        if (task.isDone()) {
+        if (task.isComplete()) {
             contentValues.put(DONE, 1);
         } else {
             contentValues.put(DONE, 0);
@@ -79,9 +78,9 @@ class TaskTable implements TableRepository {
                 chapterTask.setId(cursor.getLong(idIndex));
                 chapterTask.setName(cursor.getString(nameIndex));
                 if (cursor.getInt(doneIndex) == 1) {
-                    chapterTask.setDone(true);
+                    chapterTask.setComplete(true);
                 } else {
-                    chapterTask.setDone(false);
+                    chapterTask.setComplete(false);
                 }
                 chapterTasks.add(chapterTask);
             } while (cursor.moveToNext());

@@ -33,4 +33,7 @@ public interface ChapterDAO {
 
     @Delete
     int delete(ChapterEntity chapterEntity);
+
+    @Query("DELETE FROM CHAPTER")
+    void deleteAll();
 }

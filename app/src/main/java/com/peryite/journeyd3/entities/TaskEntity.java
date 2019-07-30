@@ -3,12 +3,14 @@ package com.peryite.journeyd3.entities;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
 import static android.arch.persistence.room.ForeignKey.CASCADE;
 
 @Entity(tableName = "task",
-        foreignKeys = @ForeignKey(entity = ChapterEntity.class, parentColumns = "_id", childColumns = "chapter_id", onDelete = CASCADE))
+        foreignKeys = @ForeignKey(entity = ChapterEntity.class, parentColumns = "_id", childColumns = "chapter_id", onDelete = CASCADE),
+        indices = @Index(value = "chapter_id"))
 public class TaskEntity {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "_id")

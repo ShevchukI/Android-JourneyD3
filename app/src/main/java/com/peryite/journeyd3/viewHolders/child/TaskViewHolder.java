@@ -34,17 +34,17 @@ public class TaskViewHolder extends ChildViewHolder {
     }
 
     public void bind(List<Chapter> chapters, int chapterPosition, int taskPosition) {
-        taskComplete.setChecked(chapters.get(chapterPosition).getTasks().get(taskPosition).isDone());
+        taskComplete.setChecked(chapters.get(chapterPosition).getTasks().get(taskPosition).isComplete());
         taskComplete.setText(chapters.get(chapterPosition).getTasks().get(taskPosition).getName());
         taskComplete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chapters.get(chapterPosition).getTasks().get(taskPosition).setDone(taskComplete.isChecked());
+                chapters.get(chapterPosition).getTasks().get(taskPosition).setComplete(taskComplete.isChecked());
                 //TODO
 //                DBHelper.getInstance(context).updateTask(chapters.get(chapterPosition).getTasks().get(taskPosition));
                 listener.notifyParentByPosition(chapterPosition);
                 Log.d(LOG_TAG, "onClick: " + chapters.get(chapterPosition).getName());
-                Log.d(LOG_TAG, "onClick: " + chapters.get(chapterPosition).getTasks().get(taskPosition).getName() + ": " + chapters.get(chapterPosition).getTasks().get(taskPosition).isDone());
+                Log.d(LOG_TAG, "onClick: " + chapters.get(chapterPosition).getTasks().get(taskPosition).getName() + ": " + chapters.get(chapterPosition).getTasks().get(taskPosition).isComplete());
             }
         });
     }
