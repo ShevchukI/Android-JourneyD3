@@ -13,8 +13,6 @@ public class ChapterEntity {
     private long id;
     @ColumnInfo(name = "name")
     private String name;
-    @ColumnInfo(name = "rewardId")
-    private long rewardId;
 
     public long getId() {
         return id;
@@ -32,11 +30,4 @@ public class ChapterEntity {
         this.name = name;
     }
 
-    public long getRewardId() {
-        return rewardId;
-    }
-
-    public void setRewardId(long rewardId) {
-        this.rewardId = rewardId;
-    }
 }

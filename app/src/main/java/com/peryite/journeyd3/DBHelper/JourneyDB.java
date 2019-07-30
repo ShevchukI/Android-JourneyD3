@@ -6,13 +6,12 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
 import com.peryite.journeyd3.DBHelper.DAO.ChapterDAO;
-import com.peryite.journeyd3.DBHelper.DAO.RewardDAO;
+import com.peryite.journeyd3.DBHelper.DAO.TaskDAO;
 import com.peryite.journeyd3.entities.ChapterEntity;
-import com.peryite.journeyd3.entities.RewardEntity;
+import com.peryite.journeyd3.entities.TaskEntity;
 import com.peryite.journeyd3.utils.Constant;
 
-@Database(entities = {ChapterEntity.class,
-        RewardEntity.class},
+@Database(entities = {ChapterEntity.class, TaskEntity.class},
         exportSchema = false, version = Constant.DATABASE_VERSION)
 public abstract class JourneyDB extends RoomDatabase {
     //    private final static String DATABASE_NAME = "journeyDB";
@@ -29,5 +28,5 @@ public abstract class JourneyDB extends RoomDatabase {
 
     public abstract ChapterDAO chapterDAO();
 
-    public abstract RewardDAO rewardDAO();
+    public abstract TaskDAO taskDAO();
 }

@@ -15,14 +15,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.peryite.journeyd3.DBHelper.DAO.ChapterDAO;
+import com.peryite.journeyd3.DBHelper.DAO.TaskDAO;
 import com.peryite.journeyd3.DBHelper.JourneyDB;
 import com.peryite.journeyd3.R;
 import com.peryite.journeyd3.adapters.ChapterRecyclerAdapter;
 import com.peryite.journeyd3.contracts.ChapterContract;
 import com.peryite.journeyd3.entities.ChapterEntity;
-import com.peryite.journeyd3.entities.RewardEntity;
+import com.peryite.journeyd3.entities.TaskEntity;
 import com.peryite.journeyd3.models.Chapter;
-import com.peryite.journeyd3.models.Reward;
 import com.peryite.journeyd3.presenters.ChapterFragmentPresenter;
 import com.peryite.journeyd3.services.ChapterService;
 import com.peryite.journeyd3.utils.AppAllComponent;
@@ -64,7 +65,8 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
     private ChapterRecyclerAdapter adapter;
     private List<Chapter> chapterList;
 
-    private JourneyDB journeyDB;
+    private ChapterDAO chapterDAO;
+    private TaskDAO taskDAO;
 
     public FragmentChapter() {
         // Required empty public constructor
@@ -84,7 +86,8 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
         view = inflater.inflate(R.layout.fragment_chapter, container, false);
         unbinder = ButterKnife.bind(this, view);
         linearLayoutManager = new LinearLayoutManager(getContext());
-        journeyDB = JourneyDB.getInstance(getContext());
+        chapterDAO = JourneyDB.getInstance(getContext()).chapterDAO();
+        taskDAO = JourneyDB.getInstance(getContext()).taskDAO();
         if (chapterList.isEmpty()) {
             new ChapterLoaderTask().execute();
         } else {
@@ -229,24 +232,52 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
 
         @Override
         protected Void doInBackground(Void... voids) {
+            List<ChapterEntity> chapterEntities = new ArrayList<>();
+
             ChapterEntity chapterEntity = new ChapterEntity();
-            chapterEntity.setId(1);
             chapterEntity.setName("Chapter I");
-            chapterEntity.setRewardId(1);
-            journeyDB.chapterDAO().insert(chapterEntity);
-            RewardEntity rewardEntity = new RewardEntity();
-            rewardEntity.setName("Test Reward");
-            rewardEntity.setComplete(false);
-            journeyDB.rewardDAO().insert(rewardEntity);
-            List<Chapter> testChapterList = journeyDB.chapterDAO().getAll();
-            for (Chapter chapter : testChapterList) {
+            chapterEntities.add(chapterEntity);
+
+            ChapterEntity chapterEntity2 = new ChapterEntity();
+            chapterEntity2.setName("Chapter II");
+            chapterEntities.add(chapterEntity2);
+
+            chapterDAO.insert(chapterEntities);
+
+
+            List<Chapter> chapters = chapterDAO.getAll();
+            List<TaskEntity> taskEntities = new ArrayList<>();
+            for (int i = 0; i < chapters.size(); i++) {
+                TaskEntity taskEntity = new TaskEntity();
+                taskEntity.setName("task from " + chapters.get(i).getName());
+                taskEntity.setComplete(false);
+                taskEntity.setChapterId(chapters.get(i).getId());
+                taskEntities.add(taskEntity);
+                taskDAO.insert(taskEntity);
+            }
+            taskEntities = taskDAO.getAllEntity();
+            for (Chapter chapter : chapters) {
                 Log.d(LOG_TAG, "doInBackground: Test DAO Chapter: " + chapter.getId() + " " + chapter.getName());
             }
-            long testId = 1L;
-            Chapter chapter = journeyDB.chapterDAO().getById(testId);
-            Reward reward = journeyDB.rewardDAO().getById(testId);
-            Log.d(LOG_TAG, "doInBackground: Test DAT Chapter By Id " + testId + ": " + chapter.getId() + " " + chapter.getName());
-            Log.d(LOG_TAG, "doInBackground: Test DAT Reward By Id " + testId + ": " + reward.getId() + " " + reward.getName() + " " + reward.isComplete());
+            for (TaskEntity taskEntity : taskEntities) {
+                Log.d(LOG_TAG, "doInBackground: Test DAO TASK: " + taskEntity.getId() + " " + taskEntity.getName()
+                        + " " + taskEntity.isComplete() + " " + taskEntity.getChapterId());
+            }
+
+//            journeyDB.chapterDAO().insert(chapterEntity);
+//            RewardEntity rewardEntity = new RewardEntity();
+//            rewardEntity.setName("Test Reward");
+//            rewardEntity.setComplete(false);
+//            journeyDB.rewardDAO().insert(rewardEntity);
+//            List<Chapter> testChapterList = journeyDB.chapterDAO().getAll();
+//            for (Chapter chapter : testChapterList) {
+//                Log.d(LOG_TAG, "doInBackground: Test DAO Chapter: " + chapter.getId() + " " + chapter.getName());
+//            }
+//            long testId = 1L;
+//            Chapter chapter = journeyDB.chapterDAO().getById(testId);
+//            Reward reward = journeyDB.rewardDAO().getById(testId);
+//            Log.d(LOG_TAG, "doInBackground: Test DAT Chapter By Id " + testId + ": " + chapter.getId() + " " + chapter.getName());
+//            Log.d(LOG_TAG, "doInBackground: Test DAT Reward By Id " + testId + ": " + reward.getId() + " " + reward.getName() + " " + reward.isComplete());
             return null;
         }
     }

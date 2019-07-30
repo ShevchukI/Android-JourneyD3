@@ -13,14 +13,20 @@ import java.util.List;
 
 @Dao
 public interface ChapterDAO {
-    @Query("SELECT _id, name FROM CHAPTER")
+    @Query("SELECT * FROM CHAPTER")
     List<Chapter> getAll();
+
+    @Query("SELECT _id, name FROM CHAPTER")
+    List<ChapterEntity> getAllEntity();
 
     @Query("SELECT _id, name FROM CHAPTER WHERE _id = :id")
     Chapter getById(long id);
 
     @Insert
     long insert(ChapterEntity chapterEntity);
+
+    @Insert
+    long[] insert(List<ChapterEntity> chapterEntities);
 
     @Update
     int update(ChapterEntity chapterEntity);

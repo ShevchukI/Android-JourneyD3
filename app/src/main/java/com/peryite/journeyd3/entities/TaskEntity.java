@@ -2,10 +2,14 @@ package com.peryite.journeyd3.entities;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 
-@Entity(tableName = "reward")
-public class RewardEntity {
+import static android.arch.persistence.room.ForeignKey.CASCADE;
+
+@Entity(tableName = "task",
+        foreignKeys = @ForeignKey(entity = ChapterEntity.class, parentColumns = "_id", childColumns = "chapter_id", onDelete = CASCADE))
+public class TaskEntity {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "_id")
     private long id;
@@ -13,6 +17,9 @@ public class RewardEntity {
     private String name;
     @ColumnInfo(name = "complete")
     private boolean complete;
+    @ColumnInfo(name = "chapter_id")
+    private long chapterId;
+
 
     public long getId() {
         return id;
@@ -36,5 +43,13 @@ public class RewardEntity {
 
     public void setComplete(boolean complete) {
         this.complete = complete;
+    }
+
+    public long getChapterId() {
+        return chapterId;
+    }
+
+    public void setChapterId(long chapterId) {
+        this.chapterId = chapterId;
     }
 }
