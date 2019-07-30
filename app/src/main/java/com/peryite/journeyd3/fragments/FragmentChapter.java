@@ -88,7 +88,7 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
         linearLayoutManager = new LinearLayoutManager(getContext());
         dataBaseConverter = DataBaseConverter.getInstance(getContext());
         if (chapterList.isEmpty()) {
-//            new ChapterLoaderTask().execute();
+            new ChapterLoaderTask().execute();
         } else {
             adapter = new ChapterRecyclerAdapter(chapterList, getContext());
             adapter.setChapterService(chapterService);
@@ -96,7 +96,7 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
             recyclerView.setLayoutManager(linearLayoutManager);
         }
         //TODO
-        new ChapterDAOTest().execute();
+//        new ChapterDAOTest().execute();
         return view;
     }
 
@@ -231,18 +231,20 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            List<Chapter> chapters = fillChapterListFromParser();
-            dataBaseConverter.clearDataBase();
-            dataBaseConverter.fillDataBase(chapters);
-            List<ChapterEntity> chapterEntities = dataBaseConverter.getChapterDAO().getAllEntity();
-            for(ChapterEntity chapter : chapterEntities){
-                Log.d(LOG_TAG, "doInBackground: Test DAO Chapter: " + chapter.getId() + " " + chapter.getName());
-            }
-            List<TaskEntity> taskEntities = dataBaseConverter.getTaskDAO().getAllEntity();
-            for(TaskEntity taskEntity : taskEntities){
-                Log.d(LOG_TAG, "doInBackground: Test DAO TASK: " + taskEntity.getId() + " " + taskEntity.getName()
-                        + " " + taskEntity.isComplete() + " " + taskEntity.getChapterId());
-            }
+            chapterList = dataBaseConverter.getAllChapters();
+//            List<Chapter> chapters = fillChapterListFromParser();
+//            dataBaseConverter.clearDataBase();
+//            dataBaseConverter.fillDataBase(chapters);
+//            List<ChapterEntity> chapterEntities = dataBaseConverter.getChapterDAO().getAllEntity();
+//            for(ChapterEntity chapter : chapterEntities){
+//                Log.d(LOG_TAG, "doInBackground: Test DAO Chapter: " + chapter.getId() + " " + chapter.getName());
+//            }
+//            List<TaskEntity> taskEntities = dataBaseConverter.getTaskDAO().getAllEntityByChapterId(1L);
+////            List<TaskEntity> taskEntities = dataBaseConverter.getTaskDAO().getAllEntity();
+//            for(TaskEntity taskEntity : taskEntities){
+//                Log.d(LOG_TAG, "doInBackground: Test DAO TASK: " + taskEntity.getId() + " " + taskEntity.getName()
+//                        + " " + taskEntity.isComplete() + " " + taskEntity.getChapterId());
+//            }
 //            List<ChapterEntity> chapterEntities = new ArrayList<>();
 //
 //            ChapterEntity chapterEntity = new ChapterEntity();
@@ -309,7 +311,10 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
     private void updateDataBase() {
         //TODO
 //        List
-//        List<Chapter> chapters = fillChapterListFromParser();
+        List<Chapter> chapters = fillChapterListFromParser();
+        dataBaseConverter.clearDataBase();
+        dataBaseConverter.fillDataBase(chapters);
+        chapterList = dataBaseConverter.getAllChapters();
 //        DBHelper.getInstance(getContext()).deleteAllRecords();
 //        DBHelper.getInstance(getContext()).fillDatabase(chapters);
 //        chapterList = fillChapterListFromDataBase();
@@ -341,14 +346,14 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
     private boolean checkDataBaseRecords() {
         //TODO
 //        boolean check = DBHelper.getInstance(getContext()).checkRecords();
-        boolean check = false;
+        boolean check = dataBaseConverter.isEmptyDataBase();
         return check;
     }
 
     private List<Chapter> fillChapterListFromDataBase() {
         //TODO
 //        List<Chapter> chapters = DBHelper.getInstance(getContext()).getAllChapters();
-        List<Chapter> chapters = new ArrayList<>();
+        List<Chapter> chapters = dataBaseConverter.getAllChapters();
         return chapters;
     }
 

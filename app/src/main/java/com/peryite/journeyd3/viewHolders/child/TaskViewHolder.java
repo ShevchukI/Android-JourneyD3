@@ -1,15 +1,20 @@
 package com.peryite.journeyd3.viewHolders.child;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.util.Log;
 import android.view.View;
 
 import com.bignerdranch.expandablerecyclerview.ChildViewHolder;
+import com.peryite.journeyd3.DBHelper.DBHelper;
+import com.peryite.journeyd3.DBHelper.DataBaseConverter;
 import com.peryite.journeyd3.R;
+import com.peryite.journeyd3.entities.TaskEntity;
 import com.peryite.journeyd3.listeners.OnChapterRecyclerAdapterListener;
 import com.peryite.journeyd3.models.Chapter;
+import com.peryite.journeyd3.models.Task;
 
 import java.util.List;
 
@@ -41,7 +46,11 @@ public class TaskViewHolder extends ChildViewHolder {
             public void onClick(View v) {
                 chapters.get(chapterPosition).getTasks().get(taskPosition).setComplete(taskComplete.isChecked());
                 //TODO
+                TaskEntity taskEntity = convertTask(chapters.get(chapterPosition).getTasks().get(taskPosition), chapters.get(chapterPosition).getId());
+                new UpdateTask().execute(taskEntity);
 //                DBHelper.getInstance(context).updateTask(chapters.get(chapterPosition).getTasks().get(taskPosition));
+//                DataBaseConverter.getInstance(context).updateTask(chapters.get(chapterPosition).getTasks().get(taskPosition));
+//                new UpdateTask().execute(chapters.get(chapterPosition).getTasks().get(taskPosition));
                 listener.notifyParentByPosition(chapterPosition);
                 Log.d(LOG_TAG, "onClick: " + chapters.get(chapterPosition).getName());
                 Log.d(LOG_TAG, "onClick: " + chapters.get(chapterPosition).getTasks().get(taskPosition).getName() + ": " + chapters.get(chapterPosition).getTasks().get(taskPosition).isComplete());
@@ -49,5 +58,22 @@ public class TaskViewHolder extends ChildViewHolder {
         });
     }
 
+    class UpdateTask extends AsyncTask<TaskEntity, Void, Void>{
 
+        @Override
+        protected Void doInBackground(TaskEntity... taskEntities) {
+            DataBaseConverter.getInstance(context).getTaskDAO().update(taskEntities[0]);
+            return null;
+        }
+
+    }
+
+    private TaskEntity convertTask(Task task, long chapterId){
+        TaskEntity taskEntity = new TaskEntity();
+        taskEntity.setId(task.getId());
+        taskEntity.setName(task.getName());
+        taskEntity.setComplete(task.isComplete());
+        taskEntity.setChapterId(chapterId);
+        return taskEntity;
+    }
 }
