@@ -2,7 +2,6 @@ package com.peryite.journeyd3.presenters;
 
 import android.util.Log;
 
-import com.peryite.journeyd3.DBHelper.DBHelper;
 import com.peryite.journeyd3.contracts.MainContract;
 import com.peryite.journeyd3.managers.FragmentManager;
 import com.peryite.journeyd3.utils.LogTag;

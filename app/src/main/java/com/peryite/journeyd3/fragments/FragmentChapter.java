@@ -15,7 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.peryite.journeyd3.DBHelper.DBHelper;
+import com.peryite.journeyd3.DBHelper.DataBaseConverter;
 import com.peryite.journeyd3.R;
 import com.peryite.journeyd3.adapters.ChapterRecyclerAdapter;
 import com.peryite.journeyd3.contracts.ChapterContract;
@@ -61,6 +61,8 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
     private ChapterRecyclerAdapter adapter;
     private List<Chapter> chapterList;
 
+    private DataBaseConverter dataBaseConverter;
+
     public FragmentChapter() {
         // Required empty public constructor
     }
@@ -79,6 +81,7 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
         view = inflater.inflate(R.layout.fragment_chapter, container, false);
         unbinder = ButterKnife.bind(this, view);
         linearLayoutManager = new LinearLayoutManager(getContext());
+        dataBaseConverter = DataBaseConverter.getInstance(getContext());
         if (chapterList.isEmpty()) {
             new ChapterLoaderTask().execute();
         } else {
@@ -165,7 +168,7 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
 
         @Override
         protected List<Chapter> doInBackground(Void... voids) {
-            DBHelper.getInstance(getContext()).resetAllTasks();
+            dataBaseConverter.getTaskDAO().reset();
             chapterList = fillChapterListFromDataBase();
             adapter = new ChapterRecyclerAdapter(chapterList, getContext());
             adapter.setChapterService(chapterService);
@@ -231,9 +234,9 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
 
     private void updateDataBase() {
         List<Chapter> chapters = fillChapterListFromParser();
-        DBHelper.getInstance(getContext()).deleteAllRecords();
-        DBHelper.getInstance(getContext()).fillDatabase(chapters);
-        chapterList = fillChapterListFromDataBase();
+        dataBaseConverter.clearDataBase();
+        dataBaseConverter.fillDataBase(chapters);
+        chapterList = dataBaseConverter.getAllChapters();
         saveTitle();
     }
 
@@ -258,15 +261,18 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
     }
 
     private boolean checkDataBaseRecords() {
-        return DBHelper.getInstance(getContext()).checkRecords();
+        boolean check = dataBaseConverter.isEmptyDataBase();
+        return check;
     }
 
     private List<Chapter> fillChapterListFromDataBase() {
-        return DBHelper.getInstance(getContext()).getAllChapters();
+        List<Chapter> chapters = dataBaseConverter.getAllChapters();
+        return chapters;
     }
 
     private List<Chapter> fillChapterListFromParser() {
-        return Parser.getInstance().getChaptersAndTasksArray();
+        List<Chapter> chapters = Parser.getInstance().getChaptersAndTasksArray();
+        return chapters;
     }
 
     @Override

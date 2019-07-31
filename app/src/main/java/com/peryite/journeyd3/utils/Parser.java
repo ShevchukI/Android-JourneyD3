@@ -25,18 +25,28 @@ public class Parser {
     }
 
     private Parser() {
+        if (document == null) {
+            while (document == null) {
+                document = getDocument();
+            }
+        }
+    }
+
+    private Document getDocument() {
         try {
             document = Jsoup.connect(URL).get();
             Log.d(LogTag.RESULT, "document connected by URL");
         } catch (IOException e) {
             Log.d(LogTag.ERROR, "Error: " + e.getMessage() + "\n");
+        } finally {
+            return document;
         }
     }
 
-    private ArrayList<Reward> getAllRewards(){
+    private ArrayList<Reward> getAllRewards() {
         ArrayList<Reward> rewards = new ArrayList<>();
         Elements elementRewards = document.getElementsByClass("rewards");
-        for(Element reward :elementRewards){
+        for (Element reward : elementRewards) {
             rewards.add(new Reward(reward.text(), false));
         }
         return rewards;
@@ -52,7 +62,7 @@ public class Parser {
             chapters.get(i).setTasks(getTasksByChapter(i + 1));
         }
         ArrayList<Reward> rewards = getAllRewards();
-        for(int i = 0; i<chapters.size(); i ++){
+        for (int i = 0; i < chapters.size(); i++) {
             chapters.get(i).setReward(rewards.get(i));
         }
         Log.d(LogTag.RESULT, "get Chapters from document");
@@ -69,8 +79,8 @@ public class Parser {
         return chapterTasks;
     }
 
-    public String getTitle(){
-       return document.title();
+    public String getTitle() {
+        return document.title();
     }
 
 }

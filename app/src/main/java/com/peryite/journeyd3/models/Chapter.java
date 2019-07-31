@@ -1,5 +1,7 @@
 package com.peryite.journeyd3.models;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Ignore;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -8,16 +10,13 @@ import com.bignerdranch.expandablerecyclerview.model.Parent;
 import java.util.List;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 
 @Data
 @NoArgsConstructor
 public class Chapter implements Parent<Task>, Parcelable {
-    private int id;
+    private long id;
     @NonNull
     private String name;
     private List<Task> tasks;
@@ -44,14 +43,14 @@ public class Chapter implements Parent<Task>, Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.id);
+        dest.writeLong(this.id);
         dest.writeString(this.name);
         dest.writeTypedList(this.tasks);
         dest.writeParcelable(this.reward, flags);
     }
 
     protected Chapter(Parcel in) {
-        this.id = in.readInt();
+        this.id = in.readLong();
         this.name = in.readString();
         this.tasks = in.createTypedArrayList(Task.CREATOR);
         this.reward = in.readParcelable(Reward.class.getClassLoader());
