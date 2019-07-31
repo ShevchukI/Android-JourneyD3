@@ -1,11 +1,11 @@
-package com.peryite.journeyd3.presenters;
+package com.peryite.journeyd3.mvp.main.presenter;
 
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.peryite.journeyd3.api.ParserApi;
-import com.peryite.journeyd3.contracts.MainContract;
+import com.peryite.journeyd3.mvp.main.contract.MainContract;
 import com.peryite.journeyd3.managers.FragmentManager;
 import com.peryite.journeyd3.utils.Constant;
 import com.peryite.journeyd3.utils.LogTag;
@@ -22,6 +22,8 @@ public class MainPresenter implements MainContract.Presenter {
     public MainPresenter(MainContract.View view, SharedPreferences preferences) {
         this.view = view;
         this.preferences = preferences;
+
+        view.setPresenter(this);
     }
 
     @Override

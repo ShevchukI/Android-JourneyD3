@@ -24,7 +24,6 @@ public class ChapterFragmentPresenter implements ChapterContract.Presenter {
         this.view = view;
         this.dataBaseApi = dataBaseApi;
 
-
         view.setPresenter(this);
     }
 

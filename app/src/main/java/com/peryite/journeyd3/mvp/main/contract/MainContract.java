@@ -1,6 +1,8 @@
-package com.peryite.journeyd3.contracts;
+package com.peryite.journeyd3.mvp.main.contract;
 
 import android.support.v4.app.Fragment;
+
+import com.peryite.journeyd3.mvp.BaseView;
 
 public interface MainContract {
 
@@ -22,7 +24,7 @@ public interface MainContract {
         void showTitle();
     }
 
-    interface View {
+    interface View extends BaseView<Presenter> {
         void start();
 
         void selectFragment(Fragment fragment, int id_fragment_navigator);
