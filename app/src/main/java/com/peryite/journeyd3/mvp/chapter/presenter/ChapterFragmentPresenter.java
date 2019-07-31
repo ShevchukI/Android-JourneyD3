@@ -1,20 +1,25 @@
 package com.peryite.journeyd3.mvp.chapter.presenter;
 
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
 import com.peryite.journeyd3.adapters.ChapterRecyclerAdapter;
 import com.peryite.journeyd3.api.DataBaseApi;
+import com.peryite.journeyd3.api.ParserApi;
 import com.peryite.journeyd3.models.Chapter;
 import com.peryite.journeyd3.mvp.chapter.contract.ChapterContract;
 import com.peryite.journeyd3.services.ChapterService;
 import com.peryite.journeyd3.utils.AppAllComponent;
+import com.peryite.journeyd3.utils.Constant;
 import com.peryite.journeyd3.utils.Parser;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class ChapterFragmentPresenter implements ChapterContract.Presenter {
     private final static String MESSAGE_QUESTION_RESTART = "Restart this season?";
@@ -24,14 +29,12 @@ public class ChapterFragmentPresenter implements ChapterContract.Presenter {
 
     private DataBaseApi dataBaseApi;
 
-    @Inject
-    ChapterService chapterService;
 
     public ChapterFragmentPresenter(ChapterContract.View view, DataBaseApi dataBaseApi) {
         this.view = view;
         this.dataBaseApi = dataBaseApi;
 
-//        AppAllComponent.getChapterComponent().injectsChapterService(this);
+
 
         view.setPresenter(this);
     }
@@ -75,16 +78,7 @@ public class ChapterFragmentPresenter implements ChapterContract.Presenter {
         protected List<Chapter> doInBackground(Void... voids) {
             if (dataBaseApi.isEmptyDataBase()) {
                 updateDataBase();
-//                chapters = dataBaseApi.getAllChapters();
-//                view.setChapters(dataBaseApi.getAllChapters());
-//                chapterList = fillChapterListFromDataBase();
             }
-//            else {
-//                updateDataBase();
-//                chapters = new ArrayList<>();
-//            }
-//            adapter = new ChapterRecyclerAdapter(chapterList, getContext());
-//            adapter.setChapterService(chapterService);
             return dataBaseApi.getAllChapters();
         }
 
@@ -115,9 +109,10 @@ public class ChapterFragmentPresenter implements ChapterContract.Presenter {
         dataBaseApi.clear();
         dataBaseApi.fillDataBase(chapters);
 //        view.setChapters(dataBaseApi.getAllChapters());
-
 //        saveTitle();
     }
+
+
 
     private List<Chapter> fillChapterListFromParser() {
         List<Chapter> chapters = Parser.getInstance().getChaptersAndTasksArray();

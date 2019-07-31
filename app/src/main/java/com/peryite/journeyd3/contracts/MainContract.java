@@ -18,12 +18,16 @@ public interface MainContract {
         void onClickRestart();
 
         void onClickUpdate();
+
+        void showTitle();
     }
 
     interface View {
         void start();
 
         void selectFragment(Fragment fragment, int id_fragment_navigator);
+
+        void showTitle(String title);
 
         void restartChapter();
 

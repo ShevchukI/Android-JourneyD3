@@ -213,12 +213,7 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
 //        chapterList = new ArrayList<>();
 //    }
 
-    private void saveTitle() {
-        SharedPreferences sharedPreferences = this.getActivity().getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(Constant.SHARED_TITLE, Parser.getInstance().getTitle());
-        editor.apply();
-    }
+
 
 //    private void updateDataBase() {
 //        List<Chapter> chapters = fillChapterListFromParser();

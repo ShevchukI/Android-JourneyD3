@@ -1,7 +1,9 @@
 package com.peryite.journeyd3.utils;
 
+import android.os.NetworkOnMainThreadException;
 import android.util.Log;
 
+import com.peryite.journeyd3.api.ParserApi;
 import com.peryite.journeyd3.models.Chapter;
 import com.peryite.journeyd3.models.Reward;
 import com.peryite.journeyd3.models.Task;
@@ -14,7 +16,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Parser {
+public class Parser implements ParserApi {
     private static final Parser ourInstance = new Parser();
 
     private final static String URL = "https://d3resource.com/journey/";
@@ -38,7 +40,9 @@ public class Parser {
             Log.d(LogTag.RESULT, "document connected by URL");
         } catch (IOException e) {
             Log.d(LogTag.ERROR, "Error: " + e.getMessage() + "\n");
-        } finally {
+        } catch (NetworkOnMainThreadException e){
+            Log.d(LogTag.ERROR, "Error: " + e.getMessage() + "\n");
+        }finally {
             return document;
         }
     }
@@ -79,6 +83,7 @@ public class Parser {
         return chapterTasks;
     }
 
+    @Override
     public String getTitle() {
         return document.title();
     }

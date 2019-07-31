@@ -18,6 +18,7 @@ import android.view.MenuItem;
 
 import com.peryite.journeyd3.DBHelper.DataBaseConverter;
 import com.peryite.journeyd3.api.DataBaseApi;
+import com.peryite.journeyd3.api.ParserApi;
 import com.peryite.journeyd3.mvp.chapter.contract.ChapterContract;
 import com.peryite.journeyd3.contracts.MainContract;
 import com.peryite.journeyd3.managers.FragmentManager;
@@ -56,10 +57,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ButterKnife.bind(this);
         initViews();
         Log.d(MainActivity.class.getSimpleName(), "onCreate: ");
-        mainPresenter = new MainPresenter(this);
+        sharedPreferences = getSharedPreferences(Constant.PREFERENCES_NAME, MODE_PRIVATE);
+        mainPresenter = new MainPresenter(this, sharedPreferences);
 //        chapterPresenter = new ChapterFragmentPresenter(FragmentManager.getInstance().getFragmentChapter());
         mainPresenter.start();
-        new TitleLoader().execute();
+
+//        new TitleLoader().execute();
     }
 
     private void initViews() {
@@ -75,32 +78,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.d(MainActivity.class.getSimpleName(), "initViews: finished");
     }
 
-    class TitleLoader extends AsyncTask<Void, Void, String> {
-
-        @Override
-        protected String doInBackground(Void... voids) {
-            String title = "";
-            if (titleShareIsEmpty()) {
-                saveTitleFromParser();
-                title = getTitleFromShare();
-            } else {
-                title = getTitleFromShare();
-            }
-            return title;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-        }
-
-        @Override
-        protected void onPostExecute(String titleName) {
-            super.onPostExecute(titleName);
-            title.setText(titleName);
-        }
-    }
+//    class TitleLoader extends AsyncTask<Void, Void, String> {
+//
+//        @Override
+//        protected String doInBackground(Void... voids) {
+//            String title = "";
+//            if (titleShareIsEmpty()) {
+//                saveTitleFromParser();
+//                title = getTitleFromShare();
+//            } else {
+//                title = getTitleFromShare();
+//            }
+//            return title;
+//        }
+//
+//        @Override
+//        protected void onPreExecute() {
+//            super.onPreExecute();
+//
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String titleName) {
+//            super.onPostExecute(titleName);
+//            title.setText(titleName);
+//        }
+//    }
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -119,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_action_update:
                 mainPresenter.onClickUpdate();
-                new TitleLoader().execute();
+//                new TitleLoader().execute();
                 break;
             case R.id.nav_credits:
                 mainPresenter.onClickCredits(item.getItemId());
@@ -147,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         dataBaseApi = DataBaseConverter.getInstance(this);
         chapterPresenter = new ChapterFragmentPresenter(FragmentManager.getInstance().getFragmentChapter(), dataBaseApi);
+        mainPresenter.showTitle();
     }
 
     @Override
@@ -159,6 +163,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
+    public void showTitle(String title) {
+        this.title.setText(title);
+    }
+
+    @Override
     public void restartChapter() {
         chapterPresenter.showRestartDialog();
     }
@@ -166,36 +175,45 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void updateChapter() {
         chapterPresenter.updateChapter();
+        mainPresenter.showTitle();
     }
 
-    private void showTitle() {
-        if (titleShareIsEmpty()) {
-            saveTitleFromParser();
-        }
-        title.setText(getTitleFromShare());
+//    private void showTitle() {
+//        if (titleShareIsEmpty()) {
+//            saveTitleFromParser();
+//        }
+//        title.setText(getTitleFromShare());
+//    }
+    private void saveTitle() {
+//        preferences.getString(Constant.SHARED_TITLE, "SEASON");
+//        preferences.edit().putString(Constant.SHARED_TITLE, parser.getTitle()).apply();
+//        SharedPreferences sharedPreferences = this.getActivity().getPreferences(MODE_PRIVATE);
+//        SharedPreferences.Editor editor = sharedPreferences.edit();
+//        editor.putString(Constant.SHARED_TITLE, Parser.getInstance().getTitle());
+//        editor.apply();
     }
+//    private String getTitleFromShare() {
+//       String title = sharedPreferences.getString(Constant.SHARED_TITLE, "SEASON");
+////        String savedTitle = sharedPreferences.getString(Constant.SHARED_TITLE, "SEASON");
+//        return title;
+//    }
 
-    private String getTitleFromShare() {
-        sharedPreferences = getPreferences(MODE_PRIVATE);
-        String savedTitle = sharedPreferences.getString(Constant.SHARED_TITLE, "");
-        return savedTitle;
-    }
-
-    private boolean titleShareIsEmpty() {
-        if (getTitleFromShare().equals("")) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private void saveTitleFromParser() {
-        sharedPreferences = getPreferences(MODE_PRIVATE);
-        Editor ed = sharedPreferences.edit();
-        String title = Parser.getInstance().getTitle();
-        ed.putString(Constant.SHARED_TITLE, title);
-        ed.apply();
-    }
+//    private boolean titleShareIsEmpty() {
+//        if (getTitleFromShare().equals("SEASON")) {
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
+//
+//    private void saveTitleFromParser() {
+//        sharedPreferences.edit().putString(Constant.SHARED_TITLE, )
+//        sharedPreferences = getPreferences(MODE_PRIVATE);
+//        Editor ed = sharedPreferences.edit();
+//        String title = Parser.getInstance().getTitle();
+//        ed.putString(Constant.SHARED_TITLE, title);
+//        ed.apply();
+//    }
 
     @Override
     public void onBackPressed() {
