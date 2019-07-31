@@ -16,7 +16,7 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void start() {
-        view.showMainFragment();
+        view.start();
     }
 
     @Override
@@ -46,7 +46,7 @@ public class MainPresenter implements MainContract.Presenter {
     @Override
     public void onClickRestart() {
         Log.d(LogTag.CLICK, "Click: restart button ");
-        view.resetChapter();
+        view.restartChapter();
     }
 
     @Override

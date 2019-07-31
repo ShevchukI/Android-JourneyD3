@@ -19,7 +19,7 @@ public interface TaskDAO {
     List<TaskEntity> getAllEntityByChapterId(long chapterId);
 
     @Query("UPDATE TASK SET complete = 0")
-    void reset();
+    void restart();
 
     @Insert
     long insert(TaskEntity taskEntity);

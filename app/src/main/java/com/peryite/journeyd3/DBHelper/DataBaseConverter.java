@@ -68,20 +68,11 @@ public class DataBaseConverter implements DataBaseApi {
     }
 
     @Override
-    public int updateTask(Task task){
-        TaskEntity taskEntity = new TaskEntity();
-        taskEntity.setId(task.getId());
-        taskEntity.setName(task.getName());
-        taskEntity.setComplete(task.isComplete());
-        return getTaskDAO().update(taskEntity);
-    }
-
-    @Override
     public boolean isEmptyDataBase(){
         if(getChapterDAO().getAllEntity().isEmpty()){
-            return false;
-        } else {
             return true;
+        } else {
+            return false;
         }
     }
 

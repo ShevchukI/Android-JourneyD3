@@ -21,11 +21,11 @@ public interface MainContract {
     }
 
     interface View {
-        void showMainFragment();
+        void start();
 
         void selectFragment(Fragment fragment, int id_fragment_navigator);
 
-        void resetChapter();
+        void restartChapter();
 
         void updateChapter();
     }

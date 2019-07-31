@@ -15,10 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.bignerdranch.expandablerecyclerview.ExpandableRecyclerAdapter;
 import com.peryite.journeyd3.DBHelper.DataBaseConverter;
 import com.peryite.journeyd3.R;
 import com.peryite.journeyd3.adapters.ChapterRecyclerAdapter;
 import com.peryite.journeyd3.api.DataBaseApi;
+import com.peryite.journeyd3.listeners.OnChapterRecyclerAdapterListener;
 import com.peryite.journeyd3.mvp.chapter.contract.ChapterContract;
 import com.peryite.journeyd3.models.Chapter;
 import com.peryite.journeyd3.mvp.chapter.presenter.ChapterFragmentPresenter;
@@ -56,14 +58,7 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
 
     private View view;
 
-    @Inject
-    ChapterService chapterService;
-
     private ChapterRecyclerAdapter adapter;
-    private List<Chapter> chapterList;
-
-    private DataBaseApi dataBaseApi;
-
     public FragmentChapter() {
         // Required empty public constructor
     }
@@ -71,9 +66,6 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState == null) {
-            initVariable();
-        }
     }
 
     @Override
@@ -82,16 +74,36 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
         view = inflater.inflate(R.layout.fragment_chapter, container, false);
         unbinder = ButterKnife.bind(this, view);
         linearLayoutManager = new LinearLayoutManager(getContext());
-        dataBaseApi = DataBaseConverter.getInstance(getContext());
-        if (chapterList.isEmpty()) {
-            new ChapterLoaderTask().execute();
-        } else {
-            adapter = new ChapterRecyclerAdapter(chapterList, getContext());
-            adapter.setChapterService(chapterService);
-            recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(linearLayoutManager);
-        }
+        recyclerView.setLayoutManager(linearLayoutManager);
+        presenter.start();
         return view;
+    }
+
+    @Override
+    public void createAdapterWithChapters(List<Chapter> chapters) {
+        adapter = new ChapterRecyclerAdapter(chapters, getContext());
+        recyclerView.setAdapter(adapter);
+    }
+
+
+    @Override
+    public void showDialog(String message, DialogInterface.OnClickListener okListener) {
+        new AlertDialog.Builder(getContext())
+                .setMessage(message)
+                .setCancelable(true)
+                .setPositiveButton(R.string.button_yes, okListener)
+                .setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .create().show();
+    }
+
+    @Override
+    public void restart() {
+        presenter.restart();
     }
 
     @Override
@@ -136,100 +148,70 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
 
     @Override
     public void setPresenter(ChapterContract.Presenter presenter) {
-
+        this.presenter = presenter;
     }
 
 
-    class ChapterLoaderTask extends AsyncTask<Void, Void, List<Chapter>> {
-        @Override
-        protected List<Chapter> doInBackground(Void... voids) {
-            if (checkDataBaseRecords()) {
-                chapterList = fillChapterListFromDataBase();
-            } else {
-                updateDataBase();
-            }
-            adapter = new ChapterRecyclerAdapter(chapterList, getContext());
-            adapter.setChapterService(chapterService);
-            return chapterList;
-        }
+//    class ChapterRestartTask extends AsyncTask<Void, Void, List<Chapter>> {
+//
+//        @Override
+//        protected List<Chapter> doInBackground(Void... voids) {
+//            dataBaseApi.getTaskDAO().restart();
+//            chapterList = fillChapterListFromDataBase();
+//            adapter = new ChapterRecyclerAdapter(chapterList, getContext());
+//            adapter.setChapterService(chapterService);
+//            return chapterList;
+//        }
+//
+//        @Override
+//        protected void onPreExecute() {
+//            super.onPreExecute();
+//            recyclerView.setVisibility(View.GONE);
+//            showProgressBar();
+//        }
+//
+//        @Override
+//        protected void onPostExecute(List<Chapter> chapters) {
+//            super.onPostExecute(chapters);
+//            recyclerView.setAdapter(adapter);
+//            recyclerView.setLayoutManager(linearLayoutManager);
+//            hideProgressBar();
+//            recyclerView.setVisibility(View.VISIBLE);
+//        }
+//    }
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            chapterList.clear();
-            showProgressBar();
-        }
+//    class ChapterUpdateTask extends AsyncTask<Void, Void, List<Chapter>> {
+//
+//        @Override
+//        protected List<Chapter> doInBackground(Void... voids) {
+//            updateDataBase();
+//            adapter = new ChapterRecyclerAdapter(chapterList, getContext());
+//            adapter.setChapterService(chapterService);
+//            return chapterList;
+//        }
+//
+//        @Override
+//        protected void onPreExecute() {
+//            super.onPreExecute();
+//            recyclerView.setVisibility(View.GONE);
+//            showProgressBar();
+//        }
+//
+//        @Override
+//        protected void onPostExecute(List<Chapter> chapters) {
+//            super.onPostExecute(chapters);
+//            recyclerView.setAdapter(adapter);
+//            recyclerView.setLayoutManager(linearLayoutManager);
+//            hideProgressBar();
+//            recyclerView.setVisibility(View.VISIBLE);
+//        }
+//    }
 
-        @Override
-        protected void onPostExecute(List<Chapter> chapters) {
-            super.onPostExecute(chapters);
-            recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(linearLayoutManager);
-            hideProgressBar();
-            recyclerView.setVisibility(View.VISIBLE);
-        }
-    }
-
-    class ChapterRestartTask extends AsyncTask<Void, Void, List<Chapter>> {
-
-        @Override
-        protected List<Chapter> doInBackground(Void... voids) {
-            dataBaseApi.getTaskDAO().reset();
-            chapterList = fillChapterListFromDataBase();
-            adapter = new ChapterRecyclerAdapter(chapterList, getContext());
-            adapter.setChapterService(chapterService);
-            return chapterList;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            recyclerView.setVisibility(View.GONE);
-            showProgressBar();
-        }
-
-        @Override
-        protected void onPostExecute(List<Chapter> chapters) {
-            super.onPostExecute(chapters);
-            recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(linearLayoutManager);
-            hideProgressBar();
-            recyclerView.setVisibility(View.VISIBLE);
-        }
-    }
-
-    class ChapterUpdateTask extends AsyncTask<Void, Void, List<Chapter>> {
-
-        @Override
-        protected List<Chapter> doInBackground(Void... voids) {
-            updateDataBase();
-            adapter = new ChapterRecyclerAdapter(chapterList, getContext());
-            adapter.setChapterService(chapterService);
-            return chapterList;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            recyclerView.setVisibility(View.GONE);
-            showProgressBar();
-        }
-
-        @Override
-        protected void onPostExecute(List<Chapter> chapters) {
-            super.onPostExecute(chapters);
-            recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(linearLayoutManager);
-            hideProgressBar();
-            recyclerView.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void initVariable() {
-        AppAllComponent.getChapterComponent().injectsChapterService(this);
-        presenter = new ChapterFragmentPresenter(this);
-        chapterList = new ArrayList<>();
-    }
+//    private void initVariable() {
+//        AppAllComponent.getChapterComponent().injectsChapterService(this);
+////        presenter = new ChapterFragmentPresenter(this);
+//        chapterList = new ArrayList<>();
+//    }
 
     private void saveTitle() {
         SharedPreferences sharedPreferences = this.getActivity().getPreferences(MODE_PRIVATE);
@@ -238,43 +220,59 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
         editor.apply();
     }
 
-    private void updateDataBase() {
-        List<Chapter> chapters = fillChapterListFromParser();
-        dataBaseApi.clear();
-        dataBaseApi.fillDataBase(chapters);
-        chapterList = dataBaseApi.getAllChapters();
-        saveTitle();
-    }
+//    private void updateDataBase() {
+//        List<Chapter> chapters = fillChapterListFromParser();
+//        dataBaseApi.clear();
+//        dataBaseApi.fillDataBase(chapters);
+//        chapterList = dataBaseApi.getAllChapters();
+//        saveTitle();
+//    }
 
     private void resetTasks() {
-        new ChapterRestartTask().execute();
+//        new ChapterRestartTask().execute();
     }
 
     private void updateTasks() {
-        new ChapterUpdateTask().execute();
+//        new ChapterUpdateTask().execute();
     }
 
-    private void showProgressBar() {
+    @Override
+    public void showProgressBar() {
         if (progressBar != null) {
             progressBar.setVisibility(View.VISIBLE);
         }
     }
 
-    private void hideProgressBar() {
+    @Override
+    public void hideProgressBar() {
         if (progressBar != null) {
             progressBar.setVisibility(View.GONE);
         }
     }
 
-    private boolean checkDataBaseRecords() {
-        boolean check = dataBaseApi.isEmptyDataBase();
-        return check;
+    @Override
+    public void showRecyclerView() {
+        if (recyclerView != null) {
+            recyclerView.setVisibility(View.VISIBLE);
+        }
     }
 
-    private List<Chapter> fillChapterListFromDataBase() {
-        List<Chapter> chapters = dataBaseApi.getAllChapters();
-        return chapters;
+    @Override
+    public void hideRecyclerView() {
+        if (recyclerView != null) {
+            recyclerView.setVisibility(View.INVISIBLE);
+        }
     }
+
+//    private boolean checkDataBaseRecords() {
+//        boolean check = dataBaseApi.isEmptyDataBase();
+//        return check;
+//    }
+//
+//    private List<Chapter> fillChapterListFromDataBase() {
+//        List<Chapter> chapters = dataBaseApi.getAllChapters();
+//        return chapters;
+//    }
 
     private List<Chapter> fillChapterListFromParser() {
         List<Chapter> chapters = Parser.getInstance().getChaptersAndTasksArray();

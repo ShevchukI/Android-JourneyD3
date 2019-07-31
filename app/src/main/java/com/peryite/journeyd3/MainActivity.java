@@ -16,6 +16,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.peryite.journeyd3.DBHelper.DataBaseConverter;
+import com.peryite.journeyd3.api.DataBaseApi;
 import com.peryite.journeyd3.mvp.chapter.contract.ChapterContract;
 import com.peryite.journeyd3.contracts.MainContract;
 import com.peryite.journeyd3.managers.FragmentManager;
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ChapterContract.Presenter chapterPresenter;
     private Fragment currentFragment;
     private SharedPreferences sharedPreferences;
+    private DataBaseApi dataBaseApi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         initViews();
         Log.d(MainActivity.class.getSimpleName(), "onCreate: ");
         mainPresenter = new MainPresenter(this);
-        chapterPresenter = new ChapterFragmentPresenter(FragmentManager.getInstance().getFragmentChapter());
+//        chapterPresenter = new ChapterFragmentPresenter(FragmentManager.getInstance().getFragmentChapter());
         mainPresenter.start();
         new TitleLoader().execute();
     }
@@ -131,14 +134,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     @Override
-    public void showMainFragment() {
+    public void start() {
         Log.d(LogTag.INFORMATION, "Info: show main fragment.");
+
         currentFragment = FragmentManager.getInstance().getFirstFragment();
+
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(MAIN_CONTAINER_ID, currentFragment);
         transaction.commit();
+
         navigationView.setCheckedItem(R.id.nav_chapter);
 
+        dataBaseApi = DataBaseConverter.getInstance(this);
+        chapterPresenter = new ChapterFragmentPresenter(FragmentManager.getInstance().getFragmentChapter(), dataBaseApi);
     }
 
     @Override
@@ -151,8 +159,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void resetChapter() {
-        chapterPresenter.resetChapter();
+    public void restartChapter() {
+        chapterPresenter.showRestartDialog();
     }
 
     @Override

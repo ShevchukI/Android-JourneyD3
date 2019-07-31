@@ -12,27 +12,28 @@ import com.peryite.journeyd3.R;
 import com.peryite.journeyd3.listeners.OnChapterRecyclerAdapterListener;
 import com.peryite.journeyd3.models.Chapter;
 import com.peryite.journeyd3.models.Task;
-import com.peryite.journeyd3.services.ChapterService;
 import com.peryite.journeyd3.viewHolders.child.TaskViewHolder;
 import com.peryite.journeyd3.viewHolders.parent.ChapterViewHolder;
 
 import java.util.List;
 
 
+
 public class ChapterRecyclerAdapter extends ExpandableRecyclerAdapter<Chapter, Task,
         ChapterViewHolder, TaskViewHolder> {
     private final static String LOG_TAG = ChapterRecyclerAdapter.class.getSimpleName();
 
-    OnChapterRecyclerAdapterListener listener;
-    ChapterService chapterService;
-    List<Chapter> chapters;
-    Context context;
+    private OnChapterRecyclerAdapterListener listener;
+
+    private List<Chapter> chapters;
+    private Context context;
     private LayoutInflater inflater;
 
     public ChapterRecyclerAdapter(@NonNull List<Chapter> parentList, Context context) {
         super(parentList);
         this.chapters = parentList;
         this.context = context;
+
         listener = new OnChapterRecyclerAdapterListener() {
             @Override
             public void notifyParentByPosition(int parentPosition) {
@@ -41,6 +42,11 @@ public class ChapterRecyclerAdapter extends ExpandableRecyclerAdapter<Chapter, T
         };
         inflater = LayoutInflater.from(context);
 
+    }
+
+    @Override
+    public void notifyParentDataSetChanged(boolean preserveExpansionState) {
+        super.notifyParentDataSetChanged(preserveExpansionState);
     }
 
     @NonNull
@@ -54,7 +60,7 @@ public class ChapterRecyclerAdapter extends ExpandableRecyclerAdapter<Chapter, T
             }
         });
 
-        return new ChapterViewHolder(view, chapterService);
+        return new ChapterViewHolder(view);
     }
 
     @NonNull
@@ -84,10 +90,5 @@ public class ChapterRecyclerAdapter extends ExpandableRecyclerAdapter<Chapter, T
     public void onBindChildViewHolder(@NonNull TaskViewHolder childViewHolder, int parentPosition, int childPosition, @NonNull Task child) {
         childViewHolder.bind(chapters, parentPosition, childPosition);
     }
-
-    public void setChapterService(ChapterService chapterService) {
-        this.chapterService = chapterService;
-    }
-
 
 }

@@ -8,6 +8,9 @@ import com.bignerdranch.expandablerecyclerview.ParentViewHolder;
 import com.peryite.journeyd3.R;
 import com.peryite.journeyd3.models.Chapter;
 import com.peryite.journeyd3.services.ChapterService;
+import com.peryite.journeyd3.utils.AppAllComponent;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -18,12 +21,13 @@ public class ChapterViewHolder extends ParentViewHolder {
     @BindView(R.id.tv_chapter_count_done)
     AppCompatTextView chapterCountDone;
 
-    private ChapterService chapterService;
+    @Inject
+    ChapterService chapterService;
 
-    public ChapterViewHolder(@NonNull View itemView, ChapterService chapterService) {
+    public ChapterViewHolder(@NonNull View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
-        this.chapterService = chapterService;
+        AppAllComponent.getChapterComponent().injectsChapterService(this);
     }
 
     public boolean shouldItemViewClickToggleExpansion() {
