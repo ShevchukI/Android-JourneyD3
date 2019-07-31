@@ -2,7 +2,7 @@ package com.peryite.journeyd3.managers;
 
 import android.support.v4.app.Fragment;
 
-import com.peryite.journeyd3.fragments.FragmentChapter;
+import com.peryite.journeyd3.mvp.chapter.view.FragmentChapter;
 import com.peryite.journeyd3.fragments.FragmentConquest;
 import com.peryite.journeyd3.fragments.FragmentCredits;
 import com.peryite.journeyd3.fragments.FragmentReward;

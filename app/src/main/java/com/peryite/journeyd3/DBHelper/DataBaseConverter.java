@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.peryite.journeyd3.DBHelper.DAO.ChapterDAO;
 import com.peryite.journeyd3.DBHelper.DAO.TaskDAO;
+import com.peryite.journeyd3.api.DataBaseApi;
 import com.peryite.journeyd3.entities.ChapterEntity;
 import com.peryite.journeyd3.entities.TaskEntity;
 import com.peryite.journeyd3.models.Chapter;
@@ -12,7 +13,7 @@ import com.peryite.journeyd3.models.Task;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DataBaseConverter {
+public class DataBaseConverter implements DataBaseApi {
     private static DataBaseConverter ourInstance = null;
 
     private Context context;
@@ -24,7 +25,6 @@ public class DataBaseConverter {
         return ourInstance;
     }
 
-
     private ChapterDAO chapterDAO;
     private TaskDAO taskDAO;
 
@@ -34,24 +34,29 @@ public class DataBaseConverter {
         taskDAO = JourneyDB.getInstance(context.getApplicationContext()).taskDAO();
     }
 
+    @Override
     public ChapterDAO getChapterDAO() {
         return chapterDAO;
     }
 
+    @Override
     public TaskDAO getTaskDAO() {
         return taskDAO;
     }
 
+    @Override
     public void fillDataBase(List<Chapter> chapters) {
         for (Chapter chapter : chapters) {
             insertChapter(chapter);
         }
     }
 
-    public void clearDataBase() {
+    @Override
+    public void clear() {
         chapterDAO.deleteAll();
     }
 
+    @Override
     public List<Chapter> getAllChapters() {
         List<Chapter> chapters = new ArrayList<>();
         List<ChapterEntity> chapterEntities = getChapterDAO().getAllEntity();
@@ -60,6 +65,24 @@ public class DataBaseConverter {
             chapters.add(chapter);
         }
         return chapters;
+    }
+
+    @Override
+    public int updateTask(Task task){
+        TaskEntity taskEntity = new TaskEntity();
+        taskEntity.setId(task.getId());
+        taskEntity.setName(task.getName());
+        taskEntity.setComplete(task.isComplete());
+        return getTaskDAO().update(taskEntity);
+    }
+
+    @Override
+    public boolean isEmptyDataBase(){
+        if(getChapterDAO().getAllEntity().isEmpty()){
+            return false;
+        } else {
+            return true;
+        }
     }
 
     private Chapter getChapterFromEntity(ChapterEntity chapterEntity){
@@ -105,21 +128,5 @@ public class DataBaseConverter {
         taskEntity.setChapterId(chapterId);
         long id = taskDAO.insert(taskEntity);
         return id;
-    }
-
-    public int updateTask(Task task){
-        TaskEntity taskEntity = new TaskEntity();
-        taskEntity.setId(task.getId());
-        taskEntity.setName(task.getName());
-        taskEntity.setComplete(task.isComplete());
-        return getTaskDAO().update(taskEntity);
-    }
-
-    public boolean isEmptyDataBase(){
-        if(getChapterDAO().getAllEntity().isEmpty()){
-            return false;
-        } else {
-            return true;
-        }
     }
 }

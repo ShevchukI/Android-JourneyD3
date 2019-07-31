@@ -10,6 +10,7 @@ import android.view.View;
 import com.bignerdranch.expandablerecyclerview.ChildViewHolder;
 import com.peryite.journeyd3.DBHelper.DataBaseConverter;
 import com.peryite.journeyd3.R;
+import com.peryite.journeyd3.api.DataBaseApi;
 import com.peryite.journeyd3.entities.TaskEntity;
 import com.peryite.journeyd3.listeners.OnChapterRecyclerAdapterListener;
 import com.peryite.journeyd3.models.Chapter;
@@ -24,6 +25,7 @@ public class TaskViewHolder extends ChildViewHolder {
     private final static String LOG_TAG = TaskViewHolder.class.getSimpleName();
 
     OnChapterRecyclerAdapterListener listener;
+    DataBaseApi dataBaseApi;
 
     private Context context;
 
@@ -35,6 +37,7 @@ public class TaskViewHolder extends ChildViewHolder {
         ButterKnife.bind(this, itemView);
         this.listener = listener;
         this.context = context;
+        dataBaseApi = DataBaseConverter.getInstance(context);
     }
 
     public void bind(List<Chapter> chapters, int chapterPosition, int taskPosition) {
@@ -54,17 +57,17 @@ public class TaskViewHolder extends ChildViewHolder {
         });
     }
 
-    class UpdateTask extends AsyncTask<TaskEntity, Void, Void>{
+    class UpdateTask extends AsyncTask<TaskEntity, Void, Void> {
 
         @Override
         protected Void doInBackground(TaskEntity... taskEntities) {
-            DataBaseConverter.getInstance(context).getTaskDAO().update(taskEntities[0]);
+            dataBaseApi.getTaskDAO().update(taskEntities[0]);
             return null;
         }
 
     }
 
-    private TaskEntity convertTask(Task task, long chapterId){
+    private TaskEntity convertTask(Task task, long chapterId) {
         TaskEntity taskEntity = new TaskEntity();
         taskEntity.setId(task.getId());
         taskEntity.setName(task.getName());

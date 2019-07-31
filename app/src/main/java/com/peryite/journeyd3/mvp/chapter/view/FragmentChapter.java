@@ -1,4 +1,4 @@
-package com.peryite.journeyd3.fragments;
+package com.peryite.journeyd3.mvp.chapter.view;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -18,9 +18,10 @@ import android.widget.ProgressBar;
 import com.peryite.journeyd3.DBHelper.DataBaseConverter;
 import com.peryite.journeyd3.R;
 import com.peryite.journeyd3.adapters.ChapterRecyclerAdapter;
-import com.peryite.journeyd3.contracts.ChapterContract;
+import com.peryite.journeyd3.api.DataBaseApi;
+import com.peryite.journeyd3.mvp.chapter.contract.ChapterContract;
 import com.peryite.journeyd3.models.Chapter;
-import com.peryite.journeyd3.presenters.ChapterFragmentPresenter;
+import com.peryite.journeyd3.mvp.chapter.presenter.ChapterFragmentPresenter;
 import com.peryite.journeyd3.services.ChapterService;
 import com.peryite.journeyd3.utils.AppAllComponent;
 import com.peryite.journeyd3.utils.Constant;
@@ -61,7 +62,7 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
     private ChapterRecyclerAdapter adapter;
     private List<Chapter> chapterList;
 
-    private DataBaseConverter dataBaseConverter;
+    private DataBaseApi dataBaseApi;
 
     public FragmentChapter() {
         // Required empty public constructor
@@ -81,7 +82,7 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
         view = inflater.inflate(R.layout.fragment_chapter, container, false);
         unbinder = ButterKnife.bind(this, view);
         linearLayoutManager = new LinearLayoutManager(getContext());
-        dataBaseConverter = DataBaseConverter.getInstance(getContext());
+        dataBaseApi = DataBaseConverter.getInstance(getContext());
         if (chapterList.isEmpty()) {
             new ChapterLoaderTask().execute();
         } else {
@@ -133,6 +134,11 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
                 .create().show();
     }
 
+    @Override
+    public void setPresenter(ChapterContract.Presenter presenter) {
+
+    }
+
 
     class ChapterLoaderTask extends AsyncTask<Void, Void, List<Chapter>> {
         @Override
@@ -168,7 +174,7 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
 
         @Override
         protected List<Chapter> doInBackground(Void... voids) {
-            dataBaseConverter.getTaskDAO().reset();
+            dataBaseApi.getTaskDAO().reset();
             chapterList = fillChapterListFromDataBase();
             adapter = new ChapterRecyclerAdapter(chapterList, getContext());
             adapter.setChapterService(chapterService);
@@ -234,9 +240,9 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
 
     private void updateDataBase() {
         List<Chapter> chapters = fillChapterListFromParser();
-        dataBaseConverter.clearDataBase();
-        dataBaseConverter.fillDataBase(chapters);
-        chapterList = dataBaseConverter.getAllChapters();
+        dataBaseApi.clear();
+        dataBaseApi.fillDataBase(chapters);
+        chapterList = dataBaseApi.getAllChapters();
         saveTitle();
     }
 
@@ -261,12 +267,12 @@ public class FragmentChapter extends Fragment implements ChapterContract.View {
     }
 
     private boolean checkDataBaseRecords() {
-        boolean check = dataBaseConverter.isEmptyDataBase();
+        boolean check = dataBaseApi.isEmptyDataBase();
         return check;
     }
 
     private List<Chapter> fillChapterListFromDataBase() {
-        List<Chapter> chapters = dataBaseConverter.getAllChapters();
+        List<Chapter> chapters = dataBaseApi.getAllChapters();
         return chapters;
     }
 

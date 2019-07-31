@@ -1,6 +1,6 @@
 package com.peryite.journeyd3.components;
 
-import com.peryite.journeyd3.fragments.FragmentChapter;
+import com.peryite.journeyd3.mvp.chapter.view.FragmentChapter;
 import com.peryite.journeyd3.modules.ChapterModule;
 
 import dagger.Component;

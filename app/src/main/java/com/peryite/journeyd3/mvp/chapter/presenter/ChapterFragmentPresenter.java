@@ -1,6 +1,6 @@
-package com.peryite.journeyd3.presenters;
+package com.peryite.journeyd3.mvp.chapter.presenter;
 
-import com.peryite.journeyd3.contracts.ChapterContract;
+import com.peryite.journeyd3.mvp.chapter.contract.ChapterContract;
 
 public class ChapterFragmentPresenter implements ChapterContract.Presenter {
 
@@ -8,6 +8,7 @@ public class ChapterFragmentPresenter implements ChapterContract.Presenter {
 
     public ChapterFragmentPresenter(ChapterContract.View view) {
         this.view = view;
+        view.setPresenter(this);
     }
 
     @Override
