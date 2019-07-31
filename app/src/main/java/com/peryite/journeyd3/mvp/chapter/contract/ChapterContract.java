@@ -18,11 +18,9 @@ public interface ChapterContract {
 
         void start();
 
-        void showRestartDialog();
-
         void restart();
 
-        void updateChapter();
+        void update();
     }
 
     interface View  extends BaseView<Presenter> {

@@ -1,8 +1,6 @@
 package com.peryite.journeyd3;
 
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -18,7 +16,6 @@ import android.view.MenuItem;
 
 import com.peryite.journeyd3.DBHelper.DataBaseConverter;
 import com.peryite.journeyd3.api.DataBaseApi;
-import com.peryite.journeyd3.api.ParserApi;
 import com.peryite.journeyd3.mvp.chapter.contract.ChapterContract;
 import com.peryite.journeyd3.contracts.MainContract;
 import com.peryite.journeyd3.managers.FragmentManager;
@@ -26,7 +23,6 @@ import com.peryite.journeyd3.mvp.chapter.presenter.ChapterFragmentPresenter;
 import com.peryite.journeyd3.presenters.MainPresenter;
 import com.peryite.journeyd3.utils.Constant;
 import com.peryite.journeyd3.utils.LogTag;
-import com.peryite.journeyd3.utils.Parser;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -122,7 +118,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_action_update:
                 mainPresenter.onClickUpdate();
-//                new TitleLoader().execute();
                 break;
             case R.id.nav_credits:
                 mainPresenter.onClickCredits(item.getItemId());
@@ -169,13 +164,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void restartChapter() {
-        chapterPresenter.showRestartDialog();
+        chapterPresenter.restart();
     }
 
     @Override
     public void updateChapter() {
-        chapterPresenter.updateChapter();
-        mainPresenter.showTitle();
+        chapterPresenter.update();
+//        chapterPresenter.showRestartDialog();
+//        chapterPresenter.update();
+//        mainPresenter.showTitle();
     }
 
 //    private void showTitle() {
